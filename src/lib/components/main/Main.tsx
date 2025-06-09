@@ -44,14 +44,26 @@ const Main = function () {
 								repositoryModel.interact({
 									type: RepositoryInteractionType.RETRIEVE,
 								});
+								break;
 							case "FORCE_IRRIGATE":
+								if (
+									repositoryModel.modelView?.status !=
+									"Active"
+								) {
+									const message =
+										"Cannot irrigate when system is inactive. Please activate system first.";
+									alert(message);
+									console.error(message);
+								}
 								repositoryModel.interact({
 									type: "FORCE_IRRIGATE",
 								});
+								break;
 							case "TOGGLE_SYSTEM":
 								repositoryModel.interact({
 									type: "TOGGLE_SYSTEM",
 								});
+								break;
 							case "ADD_TIME":
 								const addTimeInteraction =
 									interaction as InputModelInteraction<
@@ -62,6 +74,7 @@ const Main = function () {
 									type: "ADD_TIME",
 									input: addTimeInteraction.input,
 								});
+								break;
 						}
 					},
 			  }
@@ -78,7 +91,7 @@ const Main = function () {
 	);
 
 	return (
-		<div className="main">
+		<main className="main">
 			<ComponentPlaceholder
 				model={newReadonlyModel({
 					PlaceholderedComponent: Dashboard,
@@ -93,7 +106,7 @@ const Main = function () {
 					PlaceholderComponent: ControlPanelPlaceholder,
 				})}
 			/>
-		</div>
+		</main>
 	);
 };
 

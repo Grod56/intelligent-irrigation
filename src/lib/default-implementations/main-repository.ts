@@ -7,10 +7,7 @@ import {
 import { RepositoryInteractionType } from "../misc/repository";
 import { useStatefulRepository } from "../misc/use-repository";
 import { newReadonlyModel } from "@mvc-react/mvc";
-import {
-	SensorReadingsModel,
-	SensorReadingsModelView,
-} from "../components/main/content-models/content-models";
+import { SensorReadingsModelView } from "../components/main/content-models/content-models";
 
 function _deserializeSensorReadings(json: any): SensorReadingsModelView {
 	return {
@@ -18,7 +15,7 @@ function _deserializeSensorReadings(json: any): SensorReadingsModelView {
 		ph: json.ph,
 		timeRecorded: new Date(json.timeRecorded),
 		weather: {
-			current: json.current,
+			current: json.weather.current,
 			max: json.weather.max,
 		},
 	};
@@ -54,7 +51,7 @@ const viewInteractionInterface: ViewInteractionInterface<
 					.then(response =>
 						response.ok
 							? response.json()
-							: Promise.reject(response.ok)
+							: Promise.reject(response.statusText)
 					)
 					.then(json => _deserializeJSON(json));
 			default:
@@ -68,7 +65,7 @@ const viewInteractionInterface: ViewInteractionInterface<
 					.then(response =>
 						response.ok
 							? response.json()
-							: Promise.reject(response.ok)
+							: Promise.reject(response.statusText)
 					)
 					.then(json => _deserializeJSON(json));
 		}

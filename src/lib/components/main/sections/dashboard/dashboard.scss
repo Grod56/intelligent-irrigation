@@ -9,6 +9,10 @@
 		}
 		.sensor-readings {
 			@include flexible-container.vertical(0.5em);
+			& > * {
+				@include flexible-container.horizontal(1em);
+				align-items: center;
+			}
 		}
 		.chart-container {
 			flex-grow: 1;

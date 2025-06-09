@@ -1,5 +1,11 @@
+import "./placeholder.scss";
+
 const Placeholder = function () {
-	return <span>Please Wait...</span>;
+	return (
+		<div className="placeholder">
+			<img src="/spinner.gif" alt="Loading animation" />
+		</div>
+	);
 };
 
 export default Placeholder;

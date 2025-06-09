@@ -18,6 +18,7 @@
 		"@mvc-react/mvc": "^2.2.2",
 		"@mvc-react/stateful": "^3.0.0",
 		"@neondatabase/serverless": "^1.0.1",
+		"@supabase/supabase-js": "^2.50.0",
 		"autoprefixer": "^10.4.21",
 		"bootstrap": "^5.3.6",
 		"next": "15.3.3",

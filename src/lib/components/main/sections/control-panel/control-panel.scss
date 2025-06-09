@@ -16,6 +16,14 @@
 			.controls {
 				@include flexible-container.vertical(0.5em);
 				min-width: 33%;
+				button {
+					border: 0;
+					font-size: 1.25rem;
+					color: inherit;
+					background-color: darkslategrey;
+					padding: 0.5em;
+					cursor: pointer;
+				}
 			}
 		}
 	}

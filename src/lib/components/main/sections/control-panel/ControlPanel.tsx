@@ -1,16 +1,16 @@
+import Placeholder from "@/lib/components/placeholder/Placeholder";
 import SiteSection from "@/lib/components/site-section/ui/SiteSection";
-import "./control-panel.scss";
+import {
+	ConditionalComponent,
+	ModeledVoidComponent,
+} from "@mvc-react/components";
 import {
 	InputModelInteraction,
 	InteractiveModel,
 	ModelInteraction,
 	newReadonlyModel,
 } from "@mvc-react/mvc";
-import {
-	ConditionalComponent,
-	ModeledVoidComponent,
-} from "@mvc-react/components";
-import Placeholder from "@/lib/components/placeholder/Placeholder";
+import "./control-panel.scss";
 
 export interface ControlPanelModelView {
 	scheduledTimes: Array<Date>;
@@ -52,10 +52,28 @@ const ControlPanel = function ({ model }) {
 								);
 								try {
 									if (timeString) {
-										const time = new Date(timeString);
+										const parsedString =
+											timeString.split(":");
+										const scheduledTime = new Date(
+											Date.now()
+										);
+										scheduledTime.setHours(
+											Number(parsedString[0])
+										);
+										scheduledTime.setMinutes(
+											Number(parsedString[1])
+										);
+										if (
+											scheduledTime.getTime() < Date.now()
+										) {
+											const message =
+												"Scheduled time cannot be earlier than current time";
+											alert(message);
+											console.error(message);
+										}
 										interact({
 											type: "ADD_TIME",
-											input: { time: time },
+											input: { time: scheduledTime },
 										});
 									}
 								} catch (error) {

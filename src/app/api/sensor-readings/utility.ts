@@ -1,54 +1,24 @@
 import { SensorReadingsModelView } from "@/lib/components/main/content-models/content-models";
+import supabase from "@/lib/misc/third-party/supabase";
 
-export function getSensorReadingsData(type: string | null) {
-	const currentDate = new Date(Date.now());
-	const sensorReadingsModelView: SensorReadingsModelView = {
-		moisture: 56,
-		ph: 5,
+export async function getSensorReadingsData(type: string | null) {
+	const { data, error } = await supabase
+		.from("SensorReadings")
+		.select()
+		.order("timeRecorded", { ascending: false });
+	if (data == null)
+		throw new Error(`Error communicating with database: ${error}`);
+	const sensorReadings: SensorReadingsModelView[] = data.map(record => ({
+		moisture: record.moisture,
+		ph: record.pH,
+		timeRecorded: new Date(record.timeRecorded),
 		weather: {
-			current: 26,
-			max: 30,
+			current: record.currentWeather,
+			max: record.maxWeather,
 		},
-		timeRecorded: currentDate,
-	};
+	}));
 	if (type == "all") {
-		const sensorReadingModelViews: SensorReadingsModelView[] = [
-			sensorReadingsModelView,
-			{
-				moisture: 48,
-				ph: 4.9,
-				weather: {
-					current: 23,
-					max: 30,
-				},
-				timeRecorded: new Date(
-					new Date().setHours(currentDate.getHours() - 2)
-				),
-			},
-			{
-				moisture: 43,
-				ph: 4.8,
-				weather: {
-					current: 21,
-					max: 30,
-				},
-				timeRecorded: new Date(
-					new Date().setHours(currentDate.getHours() - 4)
-				),
-			},
-			{
-				moisture: 52,
-				ph: 5.1,
-				weather: {
-					current: 18,
-					max: 31,
-				},
-				timeRecorded: new Date(
-					new Date().setHours(currentDate.getHours() - 6)
-				),
-			},
-		];
-		return sensorReadingModelViews;
+		return sensorReadings;
 	}
-	return [sensorReadingsModelView];
+	return sensorReadings[0] && [sensorReadings[0]];
 }

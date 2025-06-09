@@ -1,9 +1,9 @@
 import { ChartModelView } from "@/lib/components/main/content-models/content-models";
 import { getSensorReadingsData } from "../sensor-readings/utility";
 
-export function getChartData() {
+export async function getChartData() {
 	const chartModelView: ChartModelView = {
-		sensorReadings: getSensorReadingsData("all"),
+		sensorReadings: await getSensorReadingsData("all"),
 	};
 	return chartModelView;
 }
