@@ -1,0 +1,59 @@
+@use "../utilities/theme";
+@use "../utilities/animations";
+
+@include theme.configure(
+	#c9cad1,
+	antiquewhite,
+	whitesmoke,
+	#fff,
+	#00080a,
+	#e99767,
+	"Explora"
+);
+@include animations.configure(theme.$secondary-color-1);
+@include theme.theme;
+
+* {
+	--link-highlight-color: var(--accent-color-1);
+}
+
+body {
+	font-family: sans-serif;
+	background-color: var(--primary-color-2); // TODO: Sticky artifact cover-up
+
+	a {
+		@include animations.text-color;
+
+		color: var(--secondary-color-1);
+		text-decoration-line: underline;
+		text-decoration-thickness: 1px;
+
+		&:hover {
+			color: var(--link-highlight-color) !important;
+		}
+	}
+
+	hr {
+		margin-block: 1rem;
+		opacity: 0.75;
+	}
+
+	::-webkit-scrollbar {
+		width: 5px;
+		height: 5px;
+	}
+
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: rgba(theme.$secondary-a-color-3, 0.35);
+		border-radius: 5px;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: rgba(theme.$secondary-a-color-3, 0.45);
+		border-radius: 5px;
+	}
+}

@@ -1,0 +1,44 @@
+@use "../../../styles/utilities/layout";
+@use "../../../styles/utilities/flexible-container";
+@use "../../../styles/utilities/content";
+@use "../../../styles/utilities/container";
+
+.site-section {
+	@include container.wrapper;
+	& {
+		&:last-child {
+			.background-layer::after {
+				content: none;
+			}
+		}
+		.content-layer {
+			@include flexible-container.vertical(1em);
+
+			padding-block: 2em;
+			padding-bottom: 3em;
+			padding-inline: 1.5em;
+
+			/* Yeah, have to be extra delicate with some of 
+			these class selectors for containers */
+			> .title {
+				font-family: sans-serif;
+				font-weight: 600;
+				font-size: 3.15rem;
+			}
+		}
+		.background-layer::after {
+			@include content.x-rule(false);
+		}
+	}
+}
+
+@media (min-width: layout.get-widescreen-bp()) {
+	.site-section {
+		.background-layer::after {
+			@include content.x-rule(true);
+		}
+		.content-layer {
+			padding-inline: 3em;
+		}
+	}
+}

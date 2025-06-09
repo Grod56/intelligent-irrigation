@@ -1,0 +1,53 @@
+@use "./container";
+
+@mixin -general {
+	@include container.wrapper;
+	& {
+		display: flex;
+		[data-customname="card-thumbnail"] {
+			object-fit: cover;
+		}
+		.card-details {
+			flex-grow: 1;
+			min-height: fit-content;
+		}
+	}
+}
+
+@mixin horizontal {
+	@include -general;
+	& {
+		[data-customname="card-thumbnail"] {
+			@include -horizontal-card-thumbnail;
+		}
+
+		flex-direction: row;
+		max-height: 100%;
+	}
+}
+
+@mixin vertical {
+	@include -general;
+	& {
+		[data-customname="card-thumbnail"] {
+			@include -vertical-card-thumbnail;
+		}
+
+		flex-direction: column;
+		max-width: 100%;
+	}
+}
+
+@mixin -horizontal-card-thumbnail {
+	min-height: 100%;
+	max-height: 100%;
+	min-width: unset;
+	max-width: unset;
+}
+
+@mixin -vertical-card-thumbnail {
+	min-height: unset;
+	max-height: unset;
+	min-width: 100%;
+	max-width: 100%;
+}

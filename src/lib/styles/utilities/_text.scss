@@ -1,0 +1,22 @@
+@use "./objects";
+
+@mixin limit-lines($--value) {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: $--value;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: normal;
+}
+
+@mixin heading {
+	@include objects.remove-insets;
+
+	font-weight: 500;
+	line-height: 1.2;
+}
+
+@mixin paragraph {
+	margin-top: 0;
+	margin-bottom: 1rem;
+}

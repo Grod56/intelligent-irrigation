@@ -1,0 +1,12 @@
+@use "./objects";
+
+@mixin wrapper {
+	display: flex;
+	@include fill;
+}
+
+@mixin fill {
+	& > * {
+		@include objects.fit-container;
+	}
+}

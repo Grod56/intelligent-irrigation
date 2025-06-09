@@ -1,0 +1,22 @@
+@use "../../../../styles/utilities/flexible-container";
+@use "../../../../styles/utilities/container";
+.control-panel {
+	@include container.wrapper;
+	& {
+		@include flexible-container.vertical(1em);
+		.control-panel-content {
+			@include flexible-container.horizontal(4em);
+			.scheduled-times-content {
+				@include flexible-container.horizontal(0.5em);
+				.times {
+					@include flexible-container.horizontal(0.5em);
+					flex-wrap: wrap;
+				}
+			}
+			.controls {
+				@include flexible-container.vertical(0.5em);
+				min-width: 33%;
+			}
+		}
+	}
+}

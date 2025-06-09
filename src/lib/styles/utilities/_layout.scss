@@ -1,0 +1,66 @@
+@use "./flexible-container";
+@use "./objects";
+
+$-widescreen-bp: 768px;
+$-large-screen-bp: 1024px;
+$-baseline-font-size: 1em;
+$-body-font-size: 1.25rem;
+
+@mixin configure(
+	$--widescreen-bp: $-widescreen-bp,
+	$--large-screen-bp: $-large-screen-bp,
+	$--page-font-size: $-baseline-font-size,
+	$--body-font-size: $-body-font-size
+) {
+	$-widescreen-bp: $--widescreen-bp !global;
+	$-large-screen-bp: $--large-screen-bp !global;
+	$-page-font-size: $--page-font-size !global;
+	$-body-font-size: $--body-font-size !global;
+}
+
+@mixin layout {
+	* {
+		box-sizing: border-box;
+	}
+	html {
+		@include -page;
+	}
+	body {
+		@include -body;
+	}
+	.footer {
+		align-self: flex-end;
+		width: 100%;
+	}
+}
+
+@mixin -page {
+	@include flexible-container.vertical;
+
+	min-height: 100vh;
+	height: fit-content;
+	max-width: 100vw;
+	font-size: $-baseline-font-size;
+	scroll-behavior: smooth;
+}
+
+@mixin -body {
+	@include objects.remove-insets;
+	@include flexible-container.vertical;
+	@include objects.expansive;
+
+	max-width: 100%;
+	height: fit-content;
+	font-size: $-body-font-size;
+	line-height: 1.5;
+	text-size-adjust: 100%;
+	overflow-wrap: break-word;
+}
+
+@function get-widescreen-bp() {
+	@return $-widescreen-bp;
+}
+
+@function get-large-screen-bp() {
+	@return $-large-screen-bp;
+}

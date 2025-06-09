@@ -1,0 +1,61 @@
+$-accent-font-fallback: sans-serif;
+$-alpha-1: 0.56;
+$-alpha-2: 0.93;
+$-alpha-3: 0.98;
+
+$primary-color-1: #aaa;
+$primary-color-2: #ccc;
+$primary-color-3: #eee;
+$primary-color-4: #fff;
+$secondary-color-1: #000;
+$accent-color-1: #e32e43;
+$accent-font: "Brush Script MT", $-accent-font-fallback;
+
+$primary-a-color-1: rgba($primary-color-1, $-alpha-1);
+$secondary-a-color-1: rgba($secondary-color-1, $-alpha-3);
+$secondary-a-color-2: rgba($secondary-color-1, $-alpha-2);
+$secondary-a-color-3: rgba($secondary-color-1, $-alpha-1);
+
+@mixin theme {
+	* {
+		--primary-color-1: #{$primary-color-1};
+		--primary-a-color-1: #{$primary-a-color-1};
+		--primary-color-2: #{$primary-color-2};
+		--primary-color-3: #{$primary-color-3};
+		--primary-color-4: #{$primary-color-4};
+		--secondary-color-1: #{$secondary-color-1};
+		--secondary-a-color-1: #{$secondary-a-color-1};
+		--secondary-a-color-2: #{$secondary-a-color-2};
+		--secondary-a-color-3: #{$secondary-a-color-3};
+		--accent-color-1: #{$accent-color-1};
+		--accent-font: #{$accent-font};
+	}
+
+	body {
+		background-color: var(--primary-color-1);
+		color: var(--secondary-color-1);
+	}
+}
+
+@mixin configure(
+	$--primary-color-1: $primary-color-1,
+	$--primary-color-2: $primary-color-2,
+	$--primary-color-3: $primary-color-3,
+	$--primary-color-4: $primary-color-4,
+	$--secondary-color-1: $secondary-color-1,
+	$--accent-color-1: $accent-color-1,
+	$--accent-font: $accent-font
+) {
+	$primary-color-1: $--primary-color-1 !global;
+	$primary-color-2: $--primary-color-2 !global;
+	$primary-color-3: $--primary-color-3 !global;
+	$primary-color-4: $--primary-color-4 !global;
+	$secondary-color-1: $--secondary-color-1 !global;
+	$accent-color-1: $--accent-color-1 !global;
+	$accent-font: $--accent-font, $-accent-font-fallback !global;
+
+	$primary-a-color-1: rgba($primary-color-1, $-alpha-1) !global;
+	$secondary-a-color-1: rgba($secondary-color-1, $-alpha-3) !global;
+	$secondary-a-color-2: rgba($secondary-color-1, $-alpha-2) !global;
+	$secondary-a-color-3: rgba($secondary-color-1, $-alpha-1) !global;
+}

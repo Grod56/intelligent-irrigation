@@ -1,0 +1,33 @@
+@use "./flexible-container";
+
+@mixin content {
+	@include flexible-container.vertical(0.5em);
+
+	width: 100%;
+	height: 100%;
+	text-align: left;
+	padding: 1.3em;
+	overflow-wrap: anywhere;
+	overflow: hidden;
+}
+
+@mixin title($--is-widescreen: false) {
+	@if $--is-widescreen == true {
+		font-size: calc(1.312rem + 0.2vw);
+	} @else {
+		font-size: calc(1.44rem + 0.2vw);
+	}
+}
+
+@mixin body($--is-widescreen: false) {
+	line-height: 1.8;
+	@if $--is-widescreen == true {
+		font-size: calc(0.8rem + 0.1vw);
+	} @else {
+		font-size: calc(0.938rem + 0.2vw);
+	}
+}
+
+@mixin footnote {
+	font-size: 0.813rem;
+}

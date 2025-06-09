@@ -1,0 +1,9 @@
+@mixin blur {
+	backdrop-filter: blur(5px);
+}
+
+@mixin sticky($--z-index: 1) {
+	position: sticky;
+	z-index: $--z-index;
+	top: 0;
+}

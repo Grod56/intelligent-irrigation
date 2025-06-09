@@ -1,0 +1,16 @@
+@use "../utilities/layout";
+@use "../utilities/text";
+
+@include layout.layout;
+
+p {
+	@include text.paragraph;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+	@include text.heading;
+}

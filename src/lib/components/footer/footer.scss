@@ -1,0 +1,11 @@
+@use "../../styles/utilities/flexible-container";
+.footer {
+	@include flexible-container.vertical(1em);
+	@include flexible-container.center;
+	background-color: var(--primary-color-4);
+	padding-block: 2em;
+	padding-inline: 2em;
+	.footer-text {
+		font-size: 0.88rem;
+	}
+}

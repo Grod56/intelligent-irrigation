@@ -1,0 +1,21 @@
+@mixin -flex($--gap, $--direction: column) {
+	display: flex;
+	flex-direction: $--direction;
+
+	@if $--gap {
+		gap: $--gap;
+	}
+}
+
+@mixin vertical($--gap: null) {
+	@include -flex($--gap, column);
+}
+
+@mixin horizontal($--gap: null) {
+	@include -flex($--gap, row);
+}
+
+@mixin center {
+	justify-content: center;
+	align-items: center;
+}

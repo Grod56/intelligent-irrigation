@@ -1,0 +1,56 @@
+@mixin grid(
+	$--max-X-or-Y: 2,
+	$--orientation: horizontal,
+	$--overflow: false,
+	$--is-widescreen: false,
+	$--gap: 1em
+) {
+	display: grid;
+	gap: $--gap;
+
+	@if $--overflow == true {
+		@include -grid-overflow-style($--orientation);
+	}
+	@include -grid-reactive-style(
+		$--orientation,
+		$--max-X-or-Y,
+		$--overflow,
+		$--is-widescreen
+	);
+}
+
+@mixin -grid-reactive-style(
+	$--orientation,
+	$--max-X-or-Y: 2,
+	$--overflow: false,
+	$--is-widescreen: false
+) {
+	@if $--overflow == true or $--is-widescreen == true {
+		@include -grid-layout($--orientation, $--max-X-or-Y);
+	}
+}
+
+@mixin -grid-overflow-style($--orientation) {
+	$-scrollbar-inset: 1em;
+	@if $--orientation == horizontal {
+		overflow-x: scroll;
+		overflow-y: hidden;
+		padding-bottom: $-scrollbar-inset;
+	} @else if $--orientation == vertical {
+		overflow-x: hidden;
+		overflow-y: scroll;
+		padding-right: $-scrollbar-inset;
+	} @else {
+		@error "Invalid orientation '#{$--orientation}'";
+	}
+}
+
+@mixin -grid-layout($--orientation, $--max-X-or-Y) {
+	@if $--orientation == horizontal {
+		grid-template-columns: repeat($--max-X-or-Y, 1fr);
+	} @else if $--orientation == vertical {
+		grid-template-rows: repeat($--max-X-or-Y, 1fr);
+	} @else {
+		@error "Invalid orientation '#{$orientation}'";
+	}
+}

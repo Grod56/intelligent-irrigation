@@ -1,0 +1,21 @@
+@use "../../../../styles/utilities/flexible-container";
+.dashboard {
+	.monitoring-data {
+		@include flexible-container.horizontal(5em);
+		row-gap: 1em; // Wtf?
+		flex-wrap: wrap;
+		.status {
+			font-size: 5rem;
+		}
+		.sensor-readings {
+			@include flexible-container.vertical(0.5em);
+		}
+		.chart-container {
+			flex-grow: 1;
+			height: 10em;
+			min-width: 20em;
+			max-width: 60%;
+			max-height: 100%;
+		}
+	}
+}
