@@ -1,20 +1,20 @@
 import { ReadonlyModel } from "@mvc-react/mvc";
 
 interface Weather {
-	current: number;
-	max: number;
+	currentTemp: number;
+	maxTemp: number;
+	currentCondition: string;
 }
 
-export interface SensorReadingsModelView {
-	moisture: number;
-	ph: number;
-	weather: Weather;
+export interface ReadingsModelView {
 	timeRecorded: Date;
+	moisture: number;
+	weather: Weather;
 }
 
 export interface ChartModelView {
-	sensorReadings: SensorReadingsModelView[];
+	readings: ReadingsModelView[];
 }
 
-export type SensorReadingsModel = ReadonlyModel<SensorReadingsModelView>;
+export type ReadingsModel = ReadonlyModel<ReadingsModelView>;
 export type ChartModel = ReadonlyModel<ChartModelView>;

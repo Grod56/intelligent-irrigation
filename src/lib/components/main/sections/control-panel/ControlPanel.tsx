@@ -18,7 +18,6 @@ export interface ControlPanelModelView {
 export type ControlPanelModelInteraction =
 	| ModelInteraction<"REFRESH_DATA">
 	| ModelInteraction<"FORCE_IRRIGATE">
-	| ModelInteraction<"TOGGLE_SYSTEM">
 	| InputModelInteraction<"ADD_TIME", { time: Date }>;
 
 export type ControlPanelModel = InteractiveModel<
@@ -63,14 +62,6 @@ const ControlPanel = function ({ model }) {
 										scheduledTime.setMinutes(
 											Number(parsedString[1])
 										);
-										if (
-											scheduledTime.getTime() < Date.now()
-										) {
-											const message =
-												"Scheduled time cannot be earlier than current time";
-											alert(message);
-											console.error(message);
-										}
 										interact({
 											type: "ADD_TIME",
 											input: { time: scheduledTime },
@@ -78,6 +69,7 @@ const ControlPanel = function ({ model }) {
 									}
 								} catch (error) {
 									alert(error);
+									console.error(error);
 								}
 							}}
 						>
@@ -88,12 +80,6 @@ const ControlPanel = function ({ model }) {
 							onClick={() => interact({ type: "FORCE_IRRIGATE" })}
 						>
 							Force Irrigate
-						</button>
-						<button
-							className="deactivate"
-							onClick={() => interact({ type: "TOGGLE_SYSTEM" })}
-						>
-							Toggle System
 						</button>
 					</div>
 					<div className="scheduled-times">

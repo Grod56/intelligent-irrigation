@@ -2,8 +2,9 @@ import { ChartModelView } from "@/lib/components/main/content-models/content-mod
 import { MainRepositoryModelView } from "@/lib/components/main/repository/repository";
 import supabase from "@/lib/misc/third-party/supabase";
 import { newReadonlyModel } from "@mvc-react/mvc";
-import { getScheduledTimesData } from "../scheduled-times/utility";
-import { getSensorReadingsData } from "../sensor-readings/utility";
+import { getScheduledTimes } from "../scheduled-times/utility";
+import { getReadings } from "../readings/utility";
+import { getAIFeedback } from "../ai-feedback/utility";
 
 async function getStatus() {
 	const { data } = await supabase
@@ -16,19 +17,21 @@ async function getStatus() {
 }
 
 export async function getMainData() {
-	const sensorReadingsModelViews = await getSensorReadingsData("all");
+	const sensorReadingsModelViews = await getReadings("all");
 	const status = await getStatus();
 	const sensorReadingsModelView = sensorReadingsModelViews[0];
 	const chartModelView: ChartModelView = {
-		sensorReadings: sensorReadingsModelViews,
+		readings: sensorReadingsModelViews,
 	};
-	const scheduledTimes = await getScheduledTimesData();
+	const scheduledTimes = await getScheduledTimes();
+	const aiFeedback = await getAIFeedback();
 
 	const mainRepositoryModelView: MainRepositoryModelView = {
 		status,
-		sensorReadingsModel: newReadonlyModel({ ...sensorReadingsModelView }),
+		readingsModel: newReadonlyModel({ ...sensorReadingsModelView }),
 		chartModel: newReadonlyModel(chartModelView),
 		scheduledTimes,
+		aiFeedback,
 	};
 	return mainRepositoryModelView;
 }

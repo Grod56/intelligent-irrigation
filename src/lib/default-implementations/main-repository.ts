@@ -7,16 +7,16 @@ import {
 import { RepositoryInteractionType } from "../misc/repository";
 import { useStatefulRepository } from "../misc/use-repository";
 import { newReadonlyModel } from "@mvc-react/mvc";
-import { SensorReadingsModelView } from "../components/main/content-models/content-models";
+import { ReadingsModelView } from "../components/main/content-models/content-models";
 
-function _deserializeSensorReadings(json: any): SensorReadingsModelView {
+function _deserializeReadings(json: any): ReadingsModelView {
 	return {
 		moisture: json.moisture,
-		ph: json.ph,
 		timeRecorded: new Date(json.timeRecorded),
 		weather: {
-			current: json.weather.current,
-			max: json.weather.max,
+			currentTemp: json.weather.currentTemp,
+			maxTemp: json.weather.maxTemp,
+			currentCondition: json.weather.currentCondition,
 		},
 	};
 }
@@ -24,15 +24,16 @@ function _deserializeSensorReadings(json: any): SensorReadingsModelView {
 function _deserializeJSON(json: any): MainRepositoryModelView {
 	return {
 		status: json.status,
+		aiFeedback: json.aiFeedback,
 		scheduledTimes: [...json.scheduledTimes].map(
 			scheduledTime => new Date(scheduledTime)
 		),
-		sensorReadingsModel: newReadonlyModel(
-			_deserializeSensorReadings(json.sensorReadingsModel.modelView)
+		readingsModel: newReadonlyModel(
+			_deserializeReadings(json.readingsModel.modelView)
 		),
 		chartModel: newReadonlyModel({
-			sensorReadings: [...json.chartModel.modelView.sensorReadings].map(
-				sensorReadingRaw => _deserializeSensorReadings(sensorReadingRaw)
+			readings: [...json.chartModel.modelView.readings].map(readingRaw =>
+				_deserializeReadings(readingRaw)
 			),
 		}),
 	};

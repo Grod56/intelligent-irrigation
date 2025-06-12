@@ -6,6 +6,7 @@
 .site-section {
 	@include container.wrapper;
 	& {
+		@include flexible-container.vertical(1em);
 		&:last-child {
 			.background-layer::after {
 				content: none;

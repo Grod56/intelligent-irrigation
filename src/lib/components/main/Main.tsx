@@ -23,9 +23,9 @@ const Main = function () {
 			? {
 					modelView: {
 						status: repositoryModel.modelView.status,
-						sensorReadingsModel:
-							repositoryModel.modelView.sensorReadingsModel,
+						readingsModel: repositoryModel.modelView.readingsModel,
 						chartModel: repositoryModel.modelView.chartModel,
+						aiFeedback: repositoryModel.modelView.aiFeedback,
 					},
 			  }
 			: undefined;
@@ -46,33 +46,24 @@ const Main = function () {
 								});
 								break;
 							case "FORCE_IRRIGATE":
-								if (
-									repositoryModel.modelView?.status !=
-									"Active"
-								) {
-									const message =
-										"Cannot irrigate when system is inactive. Please activate system first.";
-									alert(message);
-									console.error(message);
-								}
 								repositoryModel.interact({
 									type: "FORCE_IRRIGATE",
 								});
 								break;
-							case "TOGGLE_SYSTEM":
-								repositoryModel.interact({
-									type: "TOGGLE_SYSTEM",
-								});
-								break;
 							case "ADD_TIME":
-								const addTimeInteraction =
+								const { type, input } =
 									interaction as InputModelInteraction<
 										"ADD_TIME",
 										{ time: Date }
 									>;
+								if (input.time.getTime() < Date.now()) {
+									const message =
+										"Scheduled time cannot be earlier than current time";
+									throw new Error(message);
+								}
 								repositoryModel.interact({
-									type: "ADD_TIME",
-									input: addTimeInteraction.input,
+									type,
+									input,
 								});
 								break;
 						}

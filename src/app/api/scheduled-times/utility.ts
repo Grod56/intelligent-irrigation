@@ -1,8 +1,8 @@
 import supabase from "@/lib/misc/third-party/supabase";
 
-const RELATION = "ScheduledTimes";
+const RELATION = "ScheduledTime";
 
-export async function getScheduledTimesData() {
+export async function getScheduledTimes() {
 	const { data } = await supabase.from(RELATION).select().order("time");
 	if (data == null) throw new Error("Supabase returned null on request");
 	const scheduledTimes = data.map(record => new Date(record.time));

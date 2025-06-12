@@ -1,0 +1,17 @@
+@use "../../../styles/utilities/flexible-container";
+@use "../../../styles/utilities/container";
+
+.site-subsection {
+	@include container.wrapper;
+	& {
+		@include flexible-container.vertical(1em);
+
+		> .title {
+			font-family: sans-serif;
+			font-weight: 400;
+			font-size: 1.05rem;
+			color: var(--secondary-color-1);
+			text-transform: uppercase;
+		}
+	}
+}

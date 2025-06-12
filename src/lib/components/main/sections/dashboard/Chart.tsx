@@ -1,14 +1,14 @@
 import { ModeledVoidComponent } from "@mvc-react/components";
 import {
 	ChartModel,
-	SensorReadingsModelView,
+	ReadingsModelView,
 } from "../../content-models/content-models";
 import React from "react";
 import { Chart as CustomChart, AxisOptions } from "react-charts";
 import Placeholder from "@/lib/components/placeholder/Placeholder";
 
 const Chart = function ({ model }) {
-	const { sensorReadings } = model.modelView;
+	const { readings: sensorReadings } = model.modelView;
 
 	const data = React.useMemo(
 		() => [{ label: "Moisture", data: sensorReadings }],
@@ -16,14 +16,14 @@ const Chart = function ({ model }) {
 	);
 
 	const primaryAxis = React.useMemo(
-		(): AxisOptions<SensorReadingsModelView> => ({
+		(): AxisOptions<ReadingsModelView> => ({
 			getValue: datum => datum.timeRecorded,
 		}),
 		[]
 	);
 
 	const secondaryAxes = React.useMemo(
-		(): AxisOptions<SensorReadingsModelView>[] => [
+		(): AxisOptions<ReadingsModelView>[] => [
 			{
 				getValue: datum => datum.moisture,
 			},
