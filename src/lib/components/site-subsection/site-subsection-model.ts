@@ -2,6 +2,6 @@ import { ReadonlyModel } from "@mvc-react/mvc";
 
 export type SiteSubsectionModel = ReadonlyModel<SiteSubsectionModelView>;
 
-export interface SiteSubsectionModelView extends ContentComponentModelView {
+export interface SiteSubsectionModelView {
 	readonly subsectionTitle: string;
 }
