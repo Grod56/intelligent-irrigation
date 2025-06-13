@@ -5,7 +5,6 @@ import {
 } from "../../content-models/content-models";
 import React from "react";
 import { Chart as CustomChart, AxisOptions } from "react-charts";
-import Placeholder from "@/lib/components/placeholder/Placeholder";
 
 const Chart = function ({ model }) {
 	const { readings: sensorReadings } = model.modelView;

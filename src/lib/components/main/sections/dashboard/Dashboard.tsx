@@ -27,28 +27,28 @@ const Dashboard = function ({ model }) {
 					sectionTitle: "Dashboard",
 				})}
 			>
-				<SiteSubsection
-					model={newReadonlyModel({
-						subsectionTitle: "Readings",
-					})}
-				>
-					<div className="monitoring-data">
-						<span className="status" data-status={status}>
-							{status}
-						</span>
-						<Readings model={readingsModel} />
-						<div className="chart-container">
-							<Chart model={chartModel} />
+				<div className="monitoring-data">
+					<div className="analytics-container">
+						<div className="analytics">
+							<div className="main-panel">
+								<span className="status" data-status={status}>
+									{status}
+								</span>
+								<Readings model={readingsModel} />
+							</div>
+							<div className="ai-feedback-container">
+								<h4 className="title">AI Feedback</h4>
+								<p className="feedback">{aiFeedback}</p>
+							</div>
+							<div className="chart-panel">
+								<h4 className="title">Soil moisture series</h4>
+								<div className="chart-container">
+									<Chart model={chartModel} />
+								</div>
+							</div>
 						</div>
 					</div>
-				</SiteSubsection>
-				<SiteSubsection
-					model={newReadonlyModel({
-						subsectionTitle: "AI Feedback",
-					})}
-				>
-					<p>{aiFeedback}</p>
-				</SiteSubsection>
+				</div>
 			</SiteSection>
 		</div>
 	);

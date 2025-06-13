@@ -35,6 +35,7 @@ const Main = function () {
 					modelView: {
 						scheduledTimes:
 							repositoryModel.modelView.scheduledTimes,
+						status: repositoryModel.modelView.status,
 					},
 					interact: function (
 						interaction: ControlPanelModelInteraction

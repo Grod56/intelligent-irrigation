@@ -9,6 +9,14 @@
 			background-color: var(--secondary-color-1);
 			color: var(--primary-color-1);
 		}
+		.dashboard {
+			background: linear-gradient(
+				to bottom right,
+				transparent,
+				var(--accent-color-1),
+				var(--secondary-color-1)
+			);
+		}
 		.dashboard-placeholder,
 		.control-panel-placeholder {
 			@include flexible-container.vertical;
@@ -22,13 +30,24 @@
 		.dashboard,
 		.control-panel {
 			.content-layer {
-				padding-inline: 4em;
+				padding-inline: 1.5em;
 			}
 		}
 		hr {
-			width: 75%;
+			width: 100%;
 			margin: 0;
 			margin-bottom: 1rem;
+		}
+	}
+}
+
+@media (min-width: 768px) {
+	.main {
+		.dashboard,
+		.control-panel {
+			.content-layer {
+				padding-inline: 4em;
+			}
 		}
 	}
 }

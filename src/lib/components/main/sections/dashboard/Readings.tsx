@@ -14,8 +14,8 @@ const Readings = function ({ model }) {
 	return (
 		<div className="readings">
 			<span className="weather">
-				<FontAwesomeIcon icon={faCloud} />
-				<>
+				<FontAwesomeIcon className="icon" icon={faCloud} />
+				<span className="reading-text">
 					Weather:{" "}
 					<span>
 						<span className="current-temp">
@@ -28,15 +28,17 @@ const Readings = function ({ model }) {
 							{weather.currentCondition}
 						</span>
 					</span>
-				</>
+				</span>
 			</span>
 			<span className="moisture">
-				<FontAwesomeIcon icon={faWater} />
-				<>Moisture: {moisture}</>
+				<FontAwesomeIcon className="icon" icon={faWater} />
+				<span className="reading-text">Moisture: {moisture}</span>
 			</span>
 			<span className="last-recorded">
-				<FontAwesomeIcon icon={faClock} />
-				<>Last logged: {timeRecorded.toLocaleTimeString()}</>
+				<FontAwesomeIcon className="icon" icon={faClock} />
+				<span className="reading-text">
+					Last logged: {timeRecorded.toLocaleTimeString()}
+				</span>
 			</span>
 		</div>
 	);

@@ -5,11 +5,14 @@
 	& {
 		@include flexible-container.vertical(1em);
 		.control-panel-content {
-			@include flexible-container.horizontal(4em);
+			@include flexible-container.horizontal(2em);
+			@include flexible-container.center;
+			flex-wrap: wrap;
 			.scheduled-times-content {
-				@include flexible-container.horizontal(0.5em);
+				@include flexible-container.vertical(0.5em);
+				flex-wrap: wrap;
 				.times {
-					@include flexible-container.horizontal(0.5em);
+					@include flexible-container.vertical(0.5em);
 					flex-wrap: wrap;
 				}
 			}
@@ -17,14 +20,41 @@
 				@include flexible-container.vertical(0.5em);
 				min-width: 33%;
 				button {
-					border: 0;
+					border: 1px solid white;
+					border-radius: 6px;
 					font-size: 1.25rem;
 					color: inherit;
-					background-color: darkslategrey;
+					background-color: transparent;
 					padding: 0.5em;
 					cursor: pointer;
+
+					&:disabled {
+						background-color: #22222290;
+						cursor: unset;
+					}
+				}
+			}
+			.information-container {
+				p {
+					font-style: italic;
+					text-wrap-style: auto;
+					font-size: 1.1rem;
 				}
 			}
 		}
 	}
 }
+
+// @media (min-width:768px) {
+// 	.control-panel {
+// 		@include flexible-container.vertical(1em);
+// 		.control-panel-content {
+// 			@include flexible-container.horizontal(2em);
+// 			.scheduled-times-content {
+// 				@include flexible-container.vertical(0.5em);
+// 				flex-wrap: wrap;
+// 				.times {
+// 					@include flexible-container.vertical(0.5em);
+// 					flex-wrap: wrap;
+// 				}}}}
+// }
