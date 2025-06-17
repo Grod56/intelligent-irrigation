@@ -1,0 +1,17 @@
+@use "../../styles/utilities/container";
+@use "../../styles/utilities/flexible-container";
+@use "../../styles/utilities/effects";
+.card {
+	& {
+		@include flexible-container.vertical(1em);
+		@include effects.drop-shadow;
+		justify-content: space-between;
+		padding: 1.5em;
+		border-radius: 6px;
+		background: var(--primary-color-2);
+		> hr {
+			height: 1px;
+			margin: 0;
+		}
+	}
+}

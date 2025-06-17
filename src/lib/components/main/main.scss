@@ -1,31 +1,31 @@
+@use "../../styles/third-party/bootstrap";
 @use "../../styles/utilities/flexible-container";
 @use "../../styles/utilities/container";
-.main {
+@use "../../styles/utilities/effects";
+@use "../../styles/utilities/objects";
+
+$-loading-bar-height: 3px;
+
+.loading-bar-container {
 	@include container.wrapper;
 	& {
+		filter: drop-shadow(2px 3px 17px var(--secondary-color-1));
+		@include effects.sticky;
+		height: $-loading-bar-height;
+		.progress-bar {
+			transition: 0.3s;
+			background-color: orange;
+		}
+	}
+}
+.main {
+	& {
 		@include flexible-container.vertical;
-		.control-panel,
-		.control-panel-placeholder {
-			background-color: var(--secondary-color-1);
-			color: var(--primary-color-1);
-		}
-		.dashboard {
-			background: linear-gradient(
-				to bottom right,
-				transparent,
-				var(--accent-color-1),
-				var(--secondary-color-1)
-			);
-		}
-		.dashboard-placeholder,
-		.control-panel-placeholder {
+		.placeholder-container {
+			flex-grow: 1;
 			@include flexible-container.vertical;
+			@include objects.fit-container;
 			@include flexible-container.center;
-
-			span {
-				font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-				font-size: 5rem;
-			}
 		}
 		.dashboard,
 		.control-panel {
@@ -33,10 +33,29 @@
 				padding-inline: 1.5em;
 			}
 		}
-		hr {
-			width: 100%;
-			margin: 0;
-			margin-bottom: 1rem;
+		.control-panel {
+			background-color: var(--secondary-color-1);
+			color: var(--primary-color-1);
+		}
+		.dashboard {
+			margin-top: calc(-1 * $-loading-bar-height);
+			background: url("/background-image.jpeg");
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
+		button {
+			border-width: 1px;
+			border-style: solid;
+			border-radius: 6px;
+			font-size: 1.25rem;
+			color: inherit;
+			background-color: transparent;
+			padding: 0.5em;
+			cursor: pointer;
+			&:disabled {
+				@include effects.disabled;
+				cursor: unset;
+			}
 		}
 	}
 }

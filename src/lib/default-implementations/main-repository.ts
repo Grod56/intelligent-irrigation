@@ -1,13 +1,15 @@
+import { newReadonlyModel } from "@mvc-react/mvc";
 import { ViewInteractionInterface } from "@mvc-react/stateful";
+import { useEffect } from "react";
+import { ReadingsModelView } from "../components/main/content-models/content-models";
 import {
 	MainRepositoryModel,
 	MainRepositoryModelInteraction,
 	MainRepositoryModelView,
 } from "../components/main/repository/repository";
 import { RepositoryInteractionType } from "../misc/repository";
+import { subscribeToChanges } from "../misc/subscriptions";
 import { useStatefulRepository } from "../misc/use-repository";
-import { newReadonlyModel } from "@mvc-react/mvc";
-import { ReadingsModelView } from "../components/main/content-models/content-models";
 
 function _deserializeReadings(json: any): ReadingsModelView {
 	return {
@@ -36,6 +38,7 @@ function _deserializeJSON(json: any): MainRepositoryModelView {
 				_deserializeReadings(readingRaw)
 			),
 		}),
+		isPendingChanges: false,
 	};
 }
 
@@ -55,6 +58,13 @@ const viewInteractionInterface: ViewInteractionInterface<
 							: Promise.reject(response.statusText)
 					)
 					.then(json => _deserializeJSON(json));
+			case "PREPARE_FOR_CHANGES":
+				return interaction.input.currentModelView
+					? {
+							...interaction.input.currentModelView,
+							isPendingChanges: true,
+					  }
+					: interaction.input.currentModelView!; // TODO: Nasty solution
 			default:
 				return await fetch("/api/main", {
 					method: "POST",
@@ -74,5 +84,17 @@ const viewInteractionInterface: ViewInteractionInterface<
 };
 
 export function useMainRepository(): MainRepositoryModel {
-	return useStatefulRepository({ modelView: null, viewInteractionInterface });
+	const { modelView, interact } = useStatefulRepository({
+		modelView: null,
+		viewInteractionInterface,
+	});
+	useEffect(() => {
+		subscribeToChanges(() => {
+			interact({
+				type: RepositoryInteractionType.RETRIEVE,
+			});
+		});
+		console.log("useEffect run");
+	}, []); // Naughty
+	return { modelView, interact };
 }

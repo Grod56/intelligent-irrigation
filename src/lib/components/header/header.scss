@@ -1,13 +1,23 @@
 @use "../../styles/utilities/flexible-container";
 .header {
 	@include flexible-container.horizontal;
-
+	@include flexible-container.center;
 	background-color: var(--secondary-color-1);
 	color: var(--primary-color-1);
 	padding-inline: 2em;
 	padding-block: 1em;
 
 	.header-title {
-		font-size: 2rem;
+		font-size: 1.3rem;
+	}
+}
+
+@media (min-width: 768px) {
+	.header {
+		justify-content: unset;
+		align-items: unset;
+		.header-title {
+			font-size: 2rem;
+		}
 	}
 }

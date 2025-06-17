@@ -2,8 +2,16 @@
 	backdrop-filter: blur(5px);
 }
 
+@mixin disabled {
+	filter: contrast(0.6) grayscale(1);
+}
+
 @mixin sticky($--z-index: 1) {
 	position: sticky;
 	z-index: $--z-index;
 	top: 0;
+}
+
+@mixin drop-shadow {
+	filter: drop-shadow(2px 3px 17px var(--secondary-color-1));
 }

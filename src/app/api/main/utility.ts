@@ -32,11 +32,17 @@ export async function getMainData() {
 		chartModel: newReadonlyModel(chartModelView),
 		scheduledTimes,
 		aiFeedback,
+		isPendingChanges: false,
 	};
 	return mainRepositoryModelView;
 }
 
-export async function toggleStatus() {
-	const { error } = await supabase.rpc("togglestatus");
+export async function toggleIrrigation(ison: boolean) {
+	const { error } = await supabase.rpc("toggleirrigation", { ison });
+	if (error) throw new Error(`Error communicating with database: ${error}`);
+}
+
+export async function requestReadings() {
+	const { error } = await supabase.rpc("requestreadings");
 	if (error) throw new Error(`Error communicating with database: ${error}`);
 }

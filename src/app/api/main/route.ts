@@ -2,7 +2,7 @@ import { MainRepositoryModelInteraction } from "@/lib/components/main/repository
 import { InputModelInteraction } from "@mvc-react/mvc";
 import { NextRequest } from "next/server";
 import { addTime } from "../scheduled-times/utility";
-import { getMainData, toggleStatus } from "./utility";
+import { getMainData, requestReadings, toggleIrrigation } from "./utility";
 
 export async function GET(_: NextRequest) {
 	return new Response(JSON.stringify(await getMainData()), {
@@ -24,12 +24,13 @@ export async function POST(req: NextRequest) {
 			await addTime(time.getHours(), time.getMinutes());
 			break;
 		case "FORCE_IRRIGATE":
-			const now = new Date(Date.now());
-			await addTime(now.getHours(), now.getMinutes());
+			await toggleIrrigation(true);
 			break;
-		case "TOGGLE_SYSTEM":
-			await toggleStatus();
+		case "STOP_IRRIGATING":
+			await toggleIrrigation(false);
 			break;
+		case "REQUEST_NEW_READINGS":
+			await requestReadings();
 	}
 	return new Response(JSON.stringify(await getMainData()), {
 		status: 201,

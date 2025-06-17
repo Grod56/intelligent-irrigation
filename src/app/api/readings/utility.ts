@@ -3,7 +3,7 @@ import supabase from "@/lib/misc/third-party/supabase";
 
 export async function getReadings(type: string | null) {
 	const { data, error } = await supabase
-		.from("Reading")
+		.from("Readings")
 		.select()
 		.order("timeRecorded", { ascending: false });
 	if (data == null)

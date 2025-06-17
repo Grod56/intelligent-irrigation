@@ -1,20 +1,96 @@
-import { ModeledVoidComponent } from "@mvc-react/components";
+import {
+	ConditionalComponent,
+	ModeledVoidComponent,
+} from "@mvc-react/components";
 import { ReadingsModel } from "../../content-models/content-models";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-	faBiohazard,
-	faClock,
 	faCloud,
-	faWater,
+	faCloudSun,
+	faDroplet,
+	faMoon,
+	faSmog,
+	faSun,
 } from "@fortawesome/free-solid-svg-icons";
+import { faClock } from "@fortawesome/free-regular-svg-icons";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import { newReadonlyModel } from "@mvc-react/mvc";
 
 const Readings = function ({ model }) {
 	const { weather, moisture, timeRecorded } = model.modelView;
 	return (
 		<div className="readings">
 			<span className="weather">
-				<FontAwesomeIcon className="icon" icon={faCloud} />
+				<ConditionalComponent
+					model={newReadonlyModel({
+						condition: weather.currentCondition,
+						components: new Map([
+							[
+								"Clear",
+								() => (
+									<FontAwesomeIcon
+										className="icon"
+										icon={faMoon}
+										color={"purple"}
+									/>
+								),
+							],
+							[
+								"Sunny",
+								() => (
+									<FontAwesomeIcon
+										className="icon"
+										icon={faSun}
+										color={"yellow"}
+									/>
+								),
+							],
+							[
+								"Partly cloudy",
+								() => (
+									<FontAwesomeIcon
+										className="icon"
+										icon={faCloudSun}
+										color={"grey"}
+									/>
+								),
+							],
+							[
+								"Cloudy",
+								() => (
+									<FontAwesomeIcon
+										className="icon"
+										icon={faCloud}
+										color={"grey"}
+									/>
+								),
+							],
+							[
+								"Overcast",
+								() => (
+									<FontAwesomeIcon
+										className="icon"
+										icon={faCloud}
+										color={"grey"}
+									/>
+								),
+							],
+							[
+								"Mist",
+								() => (
+									<FontAwesomeIcon
+										className="icon"
+										icon={faSmog}
+										color={"grey"}
+									/>
+								),
+							],
+						]),
+						FallBackComponent: () => (
+							<FontAwesomeIcon className="icon" icon={faCloud} />
+						),
+					})}
+				/>
 				<span className="reading-text">
 					Weather:{" "}
 					<span>
@@ -23,15 +99,11 @@ const Readings = function ({ model }) {
 						</span>
 						{" / "}
 						<span className="max-temp">{weather.maxTemp}</span>
-						{" | "}
-						<span className="condition">
-							{weather.currentCondition}
-						</span>
 					</span>
 				</span>
 			</span>
 			<span className="moisture">
-				<FontAwesomeIcon className="icon" icon={faWater} />
+				<FontAwesomeIcon className="icon" icon={faDroplet} />
 				<span className="reading-text">Moisture: {moisture}</span>
 			</span>
 			<span className="last-recorded">

@@ -1,23 +1,38 @@
-import { ModelView } from "@mvc-react/mvc";
 import {
 	StatifiableModel,
 	useTransformedStatefulInteractiveModel,
 } from "@mvc-react/stateful";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import {
 	RepositoryInteractionType,
 	RepositoryModelInteraction,
+	RepositoryModelView,
 } from "./repository";
 
-export function useStatefulRepository<V extends ModelView>(
-	statifiableModel: StatifiableModel<V, RepositoryModelInteraction>
+export function useStatefulRepository<V extends RepositoryModelView>(
+	statifiableModel: StatifiableModel<V, RepositoryModelInteraction<V>>
 ) {
-	const model = useTransformedStatefulInteractiveModel(statifiableModel);
-	const { interact } = model;
+	const { modelView, interact } =
+		useTransformedStatefulInteractiveModel(statifiableModel);
+	const modifiedInteract = useCallback(
+		(interaction: RepositoryModelInteraction<V>) => {
+			interact({
+				type: "PREPARE_FOR_CHANGES",
+				input: {
+					currentModelView: modelView,
+				},
+			});
+			interact(interaction);
+		},
+		[interact, modelView]
+	);
 
 	useEffect(() => {
-		interact({ type: RepositoryInteractionType.RETRIEVE });
-	}, [interact]);
+		modifiedInteract({ type: RepositoryInteractionType.RETRIEVE });
+	}, []);
 
-	return model;
+	return {
+		modelView,
+		interact: modifiedInteract,
+	};
 }

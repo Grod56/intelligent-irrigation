@@ -8,19 +8,12 @@
 			@include flexible-container.horizontal(2em);
 			@include flexible-container.center;
 			flex-wrap: wrap;
-			.scheduled-times-content {
-				@include flexible-container.vertical(0.5em);
-				flex-wrap: wrap;
-				.times {
-					@include flexible-container.vertical(0.5em);
-					flex-wrap: wrap;
-				}
-			}
 			.controls {
 				@include flexible-container.vertical(0.5em);
 				min-width: 33%;
 				button {
-					border: 1px solid white;
+					width: 100%;
+					border: 1px solid var(--primary-color-4);
 					border-radius: 6px;
 					font-size: 1.25rem;
 					color: inherit;
@@ -42,6 +35,9 @@
 				}
 			}
 		}
+	}
+	hr {
+		background-color: var(--primary-color-4);
 	}
 }
 
