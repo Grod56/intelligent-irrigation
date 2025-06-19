@@ -31,7 +31,6 @@ const Chart = function ({ model }) {
 	);
 
 	return (
-		// <Placeholder />
 		<CustomChart
 			options={{
 				data,

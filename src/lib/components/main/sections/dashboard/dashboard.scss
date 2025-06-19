@@ -10,7 +10,7 @@
 .dashboard {
 	@include flexible-container.vertical(1em);
 	flex-wrap: wrap;
-	padding: 2em;
+	padding: 1.2em;
 	&[aria-disabled="true"] {
 		@include effects.disabled;
 	}
@@ -65,14 +65,6 @@
 					.ai-feedback-panel,
 					.chart-panel {
 						@include flexible-container.vertical(1em);
-						.chart-container {
-							background-color: var(--primary-color-2);
-							flex-grow: 1;
-							height: 10em;
-							width: 100%;
-							max-width: 100%;
-							max-height: 100%;
-						}
 					}
 				}
 			}
@@ -155,6 +147,49 @@
 			flex-wrap: wrap;
 		}
 	}
+	.water-consumption-panel {
+		@include container.wrapper;
+		& {
+			.card {
+				background: linear-gradient(
+					120deg,
+					lightblue,
+					var(--primary-color-1),
+					lightblue
+				);
+			}
+			.metrics {
+				@include flexible-container.vertical(0.5em);
+				font-size: 1.1rem;
+				.daily-avg {
+					@include flexible-container.horizontal(0.5em);
+					align-items: center;
+					font-size: 1.7rem;
+					.avg-number {
+						font-size: 3rem;
+						&::after {
+							content: "L";
+						}
+					}
+				}
+				.rating {
+					&::after {
+						content: "L/hr";
+					}
+				}
+				.duration {
+					&::after {
+						content: " mins";
+					}
+				}
+			}
+			.water-consumption-series {
+				& {
+					@include flexible-container.vertical(1em);
+				}
+			}
+		}
+	}
 	.card {
 		.card-details {
 			p {
@@ -184,6 +219,15 @@
 			}
 		}
 	}
+	.chart-container {
+		background-color: var(--primary-color-2);
+		border-radius: 6px;
+		flex-grow: 1;
+		height: 10em;
+		width: 100%;
+		max-width: 100%;
+		max-height: 100%;
+	}
 }
 
 @media (min-width: 768px) {
@@ -211,6 +255,12 @@
 		}
 		.crop-information-panel {
 			grid-column: 3 / 5;
+		}
+		.water-consumption-panel {
+			grid-column: 1 / 4;
+			.chart-container {
+				height: 12em;
+			}
 		}
 	}
 }

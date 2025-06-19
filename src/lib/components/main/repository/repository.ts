@@ -23,6 +23,17 @@ export type Configuration = {
 	planted: Date;
 };
 
+export type WaterConsumption = {
+	entries: {
+		date: Date;
+		waterConsumed: number;
+	}[];
+	dailyAverage: number;
+	rating: number;
+	emitters: number;
+	duration: number;
+};
+
 export interface MainRepositoryModelView extends RepositoryModelView {
 	status: SystemStatus;
 	readingsModel: ReadingsModel;
@@ -30,6 +41,7 @@ export interface MainRepositoryModelView extends RepositoryModelView {
 	scheduledTimes: Date[];
 	aiFeedback: AIFeedback;
 	config: Configuration;
+	waterConsumption: WaterConsumption;
 }
 
 export type MainRepositoryModelInteraction =

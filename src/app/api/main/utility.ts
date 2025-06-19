@@ -6,6 +6,7 @@ import { getScheduledTimes } from "../scheduled-times/utility";
 import { getReadings } from "../readings/utility";
 import { getAIFeedback } from "../ai-feedback/utility";
 import { getConfig } from "../config/utility";
+import { getWaterConsumption } from "../water-consumption/utility";
 
 async function getStatus() {
 	const { data } = await supabase
@@ -27,6 +28,7 @@ export async function getMainData() {
 	const scheduledTimes = await getScheduledTimes();
 	const aiFeedback = await getAIFeedback();
 	const config = await getConfig();
+	const waterConsumption = await getWaterConsumption();
 
 	const mainRepositoryModelView: MainRepositoryModelView = {
 		status,
@@ -36,12 +38,13 @@ export async function getMainData() {
 		aiFeedback,
 		isPendingChanges: false,
 		config,
+		waterConsumption,
 	};
 	return mainRepositoryModelView;
 }
 
 export async function toggleIrrigation(ison: boolean) {
-	const { error, statusText } = await supabase.rpc("toggleirrigation", {
+	const { error } = await supabase.rpc("toggleirrigation", {
 		ison,
 	});
 	if (error) throw new Error(`Error communicating with database: ${error}`);

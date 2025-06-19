@@ -43,6 +43,13 @@ function _deserializeJSON(json: any): MainRepositoryModelView {
 				_deserializeReadings(readingRaw)
 			),
 		}),
+		waterConsumption: {
+			...json.waterConsumption,
+			entries: [...json.waterConsumption.entries].map(entry => ({
+				...entry,
+				date: new Date(entry.date),
+			})),
+		},
 		isPendingChanges: false,
 	};
 }

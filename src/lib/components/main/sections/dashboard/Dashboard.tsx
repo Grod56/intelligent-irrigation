@@ -17,11 +17,13 @@ import {
 	AIFeedback,
 	Configuration,
 	SystemStatus,
+	WaterConsumption,
 } from "../../repository/repository";
+import { AxisOptions, Chart as CustomChart } from "react-charts";
 import Chart from "./Chart";
 import "./dashboard.scss";
 import Readings from "./Readings";
-import { faClock } from "@fortawesome/free-regular-svg-icons";
+import React from "react";
 
 export interface DashboardModelView {
 	readingsModel: ReadingsModel;
@@ -30,6 +32,7 @@ export interface DashboardModelView {
 	aiFeedback: AIFeedback;
 	scheduledTimes: Array<Date>;
 	config: Configuration;
+	waterConsumption: WaterConsumption;
 }
 
 export type DashboardModelInteraction =
@@ -66,6 +69,44 @@ const GenerationInfo = function ({
 	);
 };
 
+const WaterChart = function ({
+	entries,
+}: {
+	entries: { date: Date; waterConsumed: Number }[];
+}) {
+	const data = React.useMemo(
+		() => [{ label: "Water Consumed", data: entries }],
+		[]
+	);
+
+	const primaryAxis = React.useMemo(
+		(): AxisOptions<{ date: Date; waterConsumed: Number }> => ({
+			getValue: datum => datum.date,
+		}),
+		[]
+	);
+
+	const secondaryAxes = React.useMemo(
+		(): AxisOptions<{ date: Date; waterConsumed: Number }>[] => [
+			{
+				getValue: datum => datum.waterConsumed,
+			},
+		],
+		[]
+	);
+	return (
+		<div className="chart-container">
+			<CustomChart
+				options={{
+					data,
+					primaryAxis,
+					secondaryAxes,
+				}}
+			/>
+		</div>
+	);
+};
+
 const Dashboard = function ({ model }) {
 	const { interact } = model;
 	const {
@@ -75,6 +116,7 @@ const Dashboard = function ({ model }) {
 		aiFeedback,
 		scheduledTimes,
 		config,
+		waterConsumption,
 	} = model.modelView!;
 	const {
 		timeRecorded,
@@ -82,6 +124,8 @@ const Dashboard = function ({ model }) {
 		feedback,
 		cropAssessment,
 	} = aiFeedback;
+	const { dailyAverage, emitters, rating, entries, duration } =
+		waterConsumption;
 	const timeRecordedString = timeRecorded.toLocaleString("en-US", {
 		dateStyle: "full",
 	});
@@ -226,6 +270,26 @@ const Dashboard = function ({ model }) {
 						timeRecorded={timeRecordedString}
 					/>
 					<hr />
+				</Card>
+			</div>
+			<div className="water-consumption-panel">
+				<Card title="Water Consumption">
+					<div className="metrics">
+						<div className="daily-avg">
+							<span className="avg-text">Daily Average </span>
+							<span className="avg-number">{dailyAverage}</span>
+						</div>
+						<span className="rating">Drip Rating: {rating}</span>
+						<span className="emitters">Emitters: {emitters}</span>
+						<span className="duration">
+							Irrigation Session Duration: {duration}
+						</span>
+					</div>
+					<hr />
+					<div className="water-consumption-series">
+						<span className="title">Water Consumption Series</span>
+						<WaterChart entries={entries} />
+					</div>
 				</Card>
 			</div>
 		</div>

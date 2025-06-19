@@ -28,6 +28,7 @@ const Main = function () {
 			chartModel: repositoryModelView.chartModel,
 			aiFeedback: repositoryModelView.aiFeedback,
 			scheduledTimes: repositoryModelView.scheduledTimes,
+			waterConsumption: repositoryModelView.waterConsumption,
 		},
 		interact: function (interaction: DashboardModelInteraction) {
 			switch (interaction.type) {
