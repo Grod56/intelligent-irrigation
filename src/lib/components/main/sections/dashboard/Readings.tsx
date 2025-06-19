@@ -41,7 +41,7 @@ const Readings = function ({ model }) {
 									<FontAwesomeIcon
 										className="icon"
 										icon={faSun}
-										color={"yellow"}
+										color={"orange"}
 									/>
 								),
 							],
@@ -51,7 +51,6 @@ const Readings = function ({ model }) {
 									<FontAwesomeIcon
 										className="icon"
 										icon={faCloudSun}
-										color={"grey"}
 									/>
 								),
 							],
@@ -87,29 +86,31 @@ const Readings = function ({ model }) {
 							],
 						]),
 						FallBackComponent: () => (
-							<FontAwesomeIcon className="icon" icon={faCloud} />
+							<FontAwesomeIcon
+								className="icon"
+								icon={faCloud}
+								color={"grey"}
+							/>
 						),
 					})}
 				/>
 				<span className="reading-text">
-					Weather:{" "}
+					Weather -{" "}
 					<span>
-						<span className="current-temp">
-							{weather.currentTemp}
-						</span>
-						{" / "}
-						<span className="max-temp">{weather.maxTemp}</span>
+						<span className="temp">{weather.currentTemp}</span>
+						{" | "}
+						<span className="temp">{weather.maxTemp}</span>
 					</span>
 				</span>
 			</span>
 			<span className="moisture">
 				<FontAwesomeIcon className="icon" icon={faDroplet} />
-				<span className="reading-text">Moisture: {moisture}</span>
+				<span className="reading-text">Soil Moisture - {moisture}</span>
 			</span>
 			<span className="last-recorded">
 				<FontAwesomeIcon className="icon" icon={faClock} />
 				<span className="reading-text">
-					Last logged: {timeRecorded.toLocaleTimeString()}
+					Last logged - {timeRecorded.toLocaleTimeString()}
 				</span>
 			</span>
 		</div>

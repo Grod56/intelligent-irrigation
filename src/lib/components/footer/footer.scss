@@ -9,3 +9,11 @@
 		font-size: 0.88rem;
 	}
 }
+
+@media (min-width: 768px) {
+	.footer {
+		hr {
+			width: 75%;
+		}
+	}
+}

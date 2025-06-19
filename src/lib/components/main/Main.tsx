@@ -1,7 +1,7 @@
 "use client";
 import { RepositoryInteractionType } from "@/lib/misc/repository";
 import { ConditionalComponent } from "@mvc-react/components";
-import { InputModelInteraction, newReadonlyModel } from "@mvc-react/mvc";
+import { newReadonlyModel } from "@mvc-react/mvc";
 import { useMainRepository } from "../../default-implementations/main-repository";
 import Placeholder from "../placeholder/Placeholder";
 import LoadingBar from "../progress-bar/LoadingBar";
@@ -13,13 +13,17 @@ import ControlPanel, {
 import Dashboard, {
 	DashboardModelInteraction,
 } from "./sections/dashboard/Dashboard";
+import { MainRepositoryModelViewContext } from "@/app/page";
+import { useContext, useEffect } from "react";
 
 const Main = function () {
+	const { setCurrentValue } = useContext(MainRepositoryModelViewContext);
 	const { modelView: repositoryModelView, interact }: MainRepositoryModel =
 		useMainRepository();
 	const dashBoardModel = repositoryModelView && {
 		modelView: {
 			status: repositoryModelView.status,
+			config: repositoryModelView.config,
 			readingsModel: repositoryModelView.readingsModel,
 			chartModel: repositoryModelView.chartModel,
 			aiFeedback: repositoryModelView.aiFeedback,
@@ -27,27 +31,17 @@ const Main = function () {
 		},
 		interact: function (interaction: DashboardModelInteraction) {
 			switch (interaction.type) {
-				case "REQUEST_NEW_READINGS":
-					interact({
-						type: "REQUEST_NEW_READINGS",
-					});
-					break;
 				case "ADD_TIME":
-					const { type, input } =
-						interaction as InputModelInteraction<
-							"ADD_TIME",
-							{ time: Date }
-						>;
+					const { input } = interaction;
 					if (input.time.getTime() < Date.now()) {
 						const message =
 							"Scheduled time cannot be earlier than current time";
 						throw new Error(message);
 					}
-					interact({
-						type,
-						input,
-					});
+					interact(interaction);
 					break;
+				default:
+					interact(interaction);
 			}
 		},
 	};
@@ -63,19 +57,15 @@ const Main = function () {
 						type: RepositoryInteractionType.RETRIEVE,
 					});
 					break;
-				case "FORCE_IRRIGATE":
-					interact({
-						type: "FORCE_IRRIGATE",
-					});
-					break;
-				case "STOP_IRRIGATING":
-					interact({
-						type: "STOP_IRRIGATING",
-					});
-					break;
+				default:
+					interact(interaction);
 			}
 		},
 	};
+
+	useEffect(() => {
+		setCurrentValue(repositoryModelView);
+	}, [repositoryModelView]);
 
 	return (
 		<>

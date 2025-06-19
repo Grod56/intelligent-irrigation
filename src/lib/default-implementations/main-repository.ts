@@ -1,6 +1,6 @@
 import { newReadonlyModel } from "@mvc-react/mvc";
 import { ViewInteractionInterface } from "@mvc-react/stateful";
-import { useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { ReadingsModelView } from "../components/main/content-models/content-models";
 import {
 	MainRepositoryModel,
@@ -10,6 +10,7 @@ import {
 import { RepositoryInteractionType } from "../misc/repository";
 import { subscribeToChanges } from "../misc/subscriptions";
 import { useStatefulRepository } from "../misc/use-repository";
+import { MainRepositoryModelViewContext } from "@/app/page";
 
 function _deserializeReadings(json: any): ReadingsModelView {
 	return {
@@ -26,7 +27,11 @@ function _deserializeReadings(json: any): ReadingsModelView {
 function _deserializeJSON(json: any): MainRepositoryModelView {
 	return {
 		status: json.status,
-		aiFeedback: json.aiFeedback,
+		config: { ...json.config, planted: new Date(json.config.planted) },
+		aiFeedback: {
+			...json.aiFeedback,
+			timeRecorded: new Date(json.aiFeedback.timeRecorded),
+		},
 		scheduledTimes: [...json.scheduledTimes].map(
 			scheduledTime => new Date(scheduledTime)
 		),
@@ -84,17 +89,23 @@ const viewInteractionInterface: ViewInteractionInterface<
 };
 
 export function useMainRepository(): MainRepositoryModel {
+	const context = useContext(MainRepositoryModelViewContext);
 	const { modelView, interact } = useStatefulRepository({
-		modelView: null,
+		modelView: context.currentValue,
 		viewInteractionInterface,
 	});
-	useEffect(() => {
+
+	const changesCallback = useCallback(() => {
 		subscribeToChanges(() => {
 			interact({
 				type: RepositoryInteractionType.RETRIEVE,
 			});
 		});
-		console.log("useEffect run");
-	}, []); // Naughty
+	}, [interact]);
+
+	useEffect(() => {
+		changesCallback();
+	}, []);
+
 	return { modelView, interact };
 }

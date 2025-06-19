@@ -13,11 +13,8 @@ export async function addTime(hours: number, minutes: number) {
 	const scheduledTime = new Date(Date.now());
 	scheduledTime.setHours(hours);
 	scheduledTime.setMinutes(minutes);
-	const response = await supabase
+	const { error } = await supabase
 		.from(RELATION)
-		.insert({ time: scheduledTime.toISOString() })
-		.select();
-	console.log(response.error);
-	if (response.error)
-		throw new Error(`Error communicating with database: ${response.error}`);
+		.insert({ time: scheduledTime.toISOString() });
+	if (error) throw error;
 }

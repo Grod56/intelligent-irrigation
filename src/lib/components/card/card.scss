@@ -5,13 +5,17 @@
 	& {
 		@include flexible-container.vertical(1em);
 		@include effects.drop-shadow;
-		justify-content: space-between;
-		padding: 1.5em;
+		padding: 1.7rem;
 		border-radius: 6px;
 		background: var(--primary-color-2);
 		> hr {
 			height: 1px;
 			margin: 0;
+		}
+		.card-details {
+			@include flexible-container.vertical(1em);
+			justify-content: space-between;
+			flex-grow: 1;
 		}
 	}
 }

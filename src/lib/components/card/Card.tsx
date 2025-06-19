@@ -17,7 +17,7 @@ const Card = function ({
 			) : (
 				<></>
 			)}
-			{children}
+			<div className="card-details">{children}</div>
 		</div>
 	);
 };

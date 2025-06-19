@@ -1,5 +1,5 @@
 import Card from "@/lib/components/card/Card";
-import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
+import { faPowerOff, faSeedling } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	ConditionalComponent,
@@ -13,17 +13,23 @@ import {
 } from "@mvc-react/mvc";
 import Spinner from "react-bootstrap/Spinner";
 import { ChartModel, ReadingsModel } from "../../content-models/content-models";
-import { SystemStatus } from "../../repository/repository";
+import {
+	AIFeedback,
+	Configuration,
+	SystemStatus,
+} from "../../repository/repository";
 import Chart from "./Chart";
 import "./dashboard.scss";
 import Readings from "./Readings";
+import { faClock } from "@fortawesome/free-regular-svg-icons";
 
 export interface DashboardModelView {
 	readingsModel: ReadingsModel;
 	chartModel: ChartModel;
 	status: SystemStatus;
-	aiFeedback: string;
+	aiFeedback: AIFeedback;
 	scheduledTimes: Array<Date>;
+	config: Configuration;
 }
 
 export type DashboardModelInteraction =
@@ -35,10 +41,50 @@ export type DashboardModel = InteractiveModel<
 	DashboardModelInteraction
 >;
 
+const GenerationInfo = function ({
+	generation,
+	timeRecorded,
+	model,
+}: {
+	generation: string;
+	timeRecorded: string;
+	model: string;
+}) {
+	return (
+		<div className="generation-info">
+			<p className="generation">{generation}</p>
+			<hr />
+			<div className="generation-meta">
+				<span className="model">
+					Feedback by: <span className="model-text">{model}</span>
+				</span>
+				<span className="time-recorded">
+					<span className="time-recorded-text">{timeRecorded}</span>
+				</span>
+			</div>
+		</div>
+	);
+};
+
 const Dashboard = function ({ model }) {
 	const { interact } = model;
-	const { readingsModel, chartModel, status, aiFeedback, scheduledTimes } =
-		model.modelView!;
+	const {
+		readingsModel,
+		chartModel,
+		status,
+		aiFeedback,
+		scheduledTimes,
+		config,
+	} = model.modelView!;
+	const {
+		timeRecorded,
+		model: aIModel,
+		feedback,
+		cropAssessment,
+	} = aiFeedback;
+	const timeRecordedString = timeRecorded.toLocaleString("en-US", {
+		dateStyle: "full",
+	});
 	return (
 		<div className="dashboard" aria-disabled={status == "Inactive"}>
 			<div className="main-panel">
@@ -56,6 +102,7 @@ const Dashboard = function ({ model }) {
 												<FontAwesomeIcon
 													className="status-icon"
 													icon={faPowerOff}
+													data-status={status}
 												/>
 											),
 										],
@@ -64,7 +111,7 @@ const Dashboard = function ({ model }) {
 										<Spinner
 											className="status-icon"
 											animation="grow"
-											variant="success"
+											data-status={status}
 										/>
 									),
 								})}
@@ -76,7 +123,11 @@ const Dashboard = function ({ model }) {
 						<hr />
 						<div className="ai-feedback-panel">
 							<h4 className="title">AI Feedback</h4>
-							<p className="feedback">{aiFeedback}</p>
+							<GenerationInfo
+								model={aIModel}
+								generation={feedback}
+								timeRecorded={timeRecordedString}
+							/>
 						</div>
 						<div className="chart-panel">
 							<h4 className="title">Soil Moisture Series</h4>
@@ -145,19 +196,36 @@ const Dashboard = function ({ model }) {
 				</Card>
 			</div>
 			<div className="crop-information-panel">
-				<Card title="Crop Information">
+				<Card title="Crop Assessment">
 					<div className="symbols">
 						<div className="crop-symbol">
-							<img className="icon" src={"/corn-icon.svg"} />
-							<span className="text">Crop — Maize</span>
+							<FontAwesomeIcon
+								className="icon"
+								color={"green"}
+								icon={faSeedling}
+							/>
+							<span className="text">{config.crop}</span>
 						</div>
 						<div className="soil-type-symbol">
-							<img className="icon" src={"/soil-icon.svg"} />
-							<span className="text">Soil type — Sand</span>
+							<img className="icon" src={"/soil.png"} />
+							<span className="text">{config.soil}</span>
 						</div>
+						<hr />
 					</div>
+					<div className="planted-details">
+						<span className="text">
+							Planted on{" "}
+							{config.planted.toLocaleString("en-us", {
+								dateStyle: "long",
+							})}
+						</span>
+					</div>
+					<GenerationInfo
+						model={aIModel}
+						generation={cropAssessment}
+						timeRecorded={timeRecordedString}
+					/>
 					<hr />
-					<p className="information">{aiFeedback}</p>
 				</Card>
 			</div>
 		</div>

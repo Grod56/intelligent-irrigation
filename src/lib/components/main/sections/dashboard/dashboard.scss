@@ -14,6 +14,12 @@
 	&[aria-disabled="true"] {
 		@include effects.disabled;
 	}
+	.main-panel,
+	.readings-panel,
+	.scheduled-times-panel,
+	.crop-information-panel {
+		@include container.wrapper;
+	}
 	.title {
 		@include text.heading;
 		font-size: 1.1rem;
@@ -44,7 +50,12 @@
 							&.spinner-grow {
 								width: 1em;
 								height: 1em;
-								background-color: green;
+								&[data-status="Active"] {
+									background-color: green;
+								}
+								&[data-status="Idle"] {
+									background-color: orange;
+								}
 							}
 						}
 						.status-text {
@@ -63,11 +74,6 @@
 							max-height: 100%;
 						}
 					}
-					.ai-feedback-panel {
-						.feedback {
-							text-align: justify;
-						}
-					}
 				}
 			}
 		}
@@ -75,12 +81,14 @@
 	.readings-panel {
 		.readings {
 			& {
+				flex-grow: 1;
 				@include flexible-container.vertical(0.5em);
 				justify-content: center;
-				font-size: calc(1rem + 0.1vw);
+				font-size: 1rem;
 				.icon {
 					width: 1em;
 					height: 1em;
+					opacity: 0.7;
 				}
 				.moisture {
 					.icon {
@@ -92,8 +100,10 @@
 				@include flexible-container.horizontal(1em);
 				align-items: center;
 				.reading-text {
-					@include flexible-container.horizontal(0.5em);
 					align-items: center;
+					.temp::after {
+						content: "°C";
+					}
 				}
 			}
 		}
@@ -102,20 +112,34 @@
 		@include container.wrapper;
 		& {
 			@include flexible-container.vertical(1em);
+
+			.card-details {
+				justify-content: start;
+			}
 			.symbols {
-				@include flexible-container.vertical(0.5em);
+				@include flexible-container.horizontal(1em);
+				flex-wrap: wrap;
 				.crop-symbol,
 				.soil-type-symbol {
 					@include flexible-container.horizontal(0.5em);
+					justify-content: center;
 					> .icon {
 						width: 2em;
 						height: 1.5em;
+						opacity: 0.7;
 					}
 				}
 			}
 			hr {
-				height: 1px;
 				margin: 0;
+			}
+			.planted-details {
+				@include flexible-container.horizontal(0.5em);
+				align-items: center;
+				font-size: 0.9rem;
+				> .text {
+					align-content: center;
+				}
 			}
 		}
 	}
@@ -131,18 +155,41 @@
 			flex-wrap: wrap;
 		}
 	}
+	.card {
+		.card-details {
+			p {
+				font-size: 1.1rem;
+				line-height: 1.7;
+			}
+			button {
+				font-size: 0.9rem;
+				text-transform: uppercase;
+			}
+		}
+	}
+	.generation-info {
+		@include container.wrapper;
+		& {
+			hr {
+				height: 1.1px; // For some reason I have to do this for them to show
+			}
+			@include flexible-container.vertical(0.5em);
+			.generation-meta {
+				font-size: 0.88rem;
+				@include flexible-container.vertical(0.25em);
+				.model-text {
+					text-transform: uppercase;
+					opacity: 0.7;
+				}
+			}
+		}
+	}
 }
 
 @media (min-width: 768px) {
 	.dashboard {
 		@include grid-container.grid(4, horizontal, false, true, 1em);
 		padding-inline: 2em;
-		.main-panel,
-		.readings-panel,
-		.scheduled-times-panel,
-		.crop-information-panel {
-			@include container.wrapper;
-		}
 		.main-panel {
 			grid-row: 1 / 3;
 			grid-column: 1 / 3;
@@ -155,23 +202,15 @@
 							font-size: 3.5rem;
 						}
 					}
-					.ai-feedback-panel {
-						.feedback {
-							font-size: 1.1rem;
-							line-height: 1.6;
-						}
-					}
 				}
 			}
 		}
 		.readings-panel {
-			font-size: 1.2rem;
+			font-size: 1.1rem;
+			min-width: fit-content;
 		}
 		.crop-information-panel {
 			grid-column: 3 / 5;
-			hr {
-				height: 2px; // For some reason I have to do this for them to show
-			}
 		}
 	}
 }

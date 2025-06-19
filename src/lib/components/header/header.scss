@@ -7,8 +7,17 @@
 	padding-inline: 2em;
 	padding-block: 1em;
 
+	.header-content {
+		@include flexible-container.horizontal(1em);
+		justify-items: center;
+		.header-icon {
+			width: 2em;
+			height: 2em;
+		}
+	}
 	.header-title {
 		font-size: 1.3rem;
+		align-content: center;
 	}
 }
 

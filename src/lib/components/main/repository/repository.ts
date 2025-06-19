@@ -8,12 +8,27 @@ import { ChartModel, ReadingsModel } from "../content-models/content-models";
 
 export type SystemStatus = "Active" | "Idle" | "Inactive";
 
+export type AIFeedback = {
+	feedback: string;
+	cropAssessment: string;
+	model: string;
+	timeRecorded: Date;
+};
+
+export type Configuration = {
+	crop: string;
+	soil: string;
+	location: string;
+	planted: Date;
+};
+
 export interface MainRepositoryModelView extends RepositoryModelView {
 	status: SystemStatus;
 	readingsModel: ReadingsModel;
 	chartModel: ChartModel;
 	scheduledTimes: Date[];
-	aiFeedback: string;
+	aiFeedback: AIFeedback;
+	config: Configuration;
 }
 
 export type MainRepositoryModelInteraction =

@@ -5,6 +5,7 @@ import { newReadonlyModel } from "@mvc-react/mvc";
 import { getScheduledTimes } from "../scheduled-times/utility";
 import { getReadings } from "../readings/utility";
 import { getAIFeedback } from "../ai-feedback/utility";
+import { getConfig } from "../config/utility";
 
 async function getStatus() {
 	const { data } = await supabase
@@ -17,14 +18,15 @@ async function getStatus() {
 }
 
 export async function getMainData() {
-	const sensorReadingsModelViews = await getReadings("all");
+	const readingsModelViews = await getReadings("all");
 	const status = await getStatus();
-	const sensorReadingsModelView = sensorReadingsModelViews[0];
+	const sensorReadingsModelView = readingsModelViews[0];
 	const chartModelView: ChartModelView = {
-		readings: sensorReadingsModelViews,
+		readings: readingsModelViews,
 	};
 	const scheduledTimes = await getScheduledTimes();
 	const aiFeedback = await getAIFeedback();
+	const config = await getConfig();
 
 	const mainRepositoryModelView: MainRepositoryModelView = {
 		status,
@@ -33,12 +35,15 @@ export async function getMainData() {
 		scheduledTimes,
 		aiFeedback,
 		isPendingChanges: false,
+		config,
 	};
 	return mainRepositoryModelView;
 }
 
 export async function toggleIrrigation(ison: boolean) {
-	const { error } = await supabase.rpc("toggleirrigation", { ison });
+	const { error, statusText } = await supabase.rpc("toggleirrigation", {
+		ison,
+	});
 	if (error) throw new Error(`Error communicating with database: ${error}`);
 }
 
