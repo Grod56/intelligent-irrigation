@@ -5,6 +5,7 @@ import {
 } from "@/lib/misc/repository";
 import { InputModelInteraction, ModelInteraction } from "@mvc-react/mvc";
 import { ChartModel, ReadingsModel } from "../content-models/content-models";
+import { createContext } from "react";
 
 export type SystemStatus = "Active" | "Idle" | "Inactive";
 
@@ -42,3 +43,12 @@ export type MainRepositoryModel = RepositoryModel<
 	MainRepositoryModelView,
 	MainRepositoryModelInteraction
 >;
+export const MainRepositoryModelViewContext = createContext<{
+	currentValue: MainRepositoryModelView | null;
+	setCurrentValue: (
+		repositoryModelView: MainRepositoryModelView | null
+	) => void;
+}>({
+	currentValue: null,
+	setCurrentValue: (_: MainRepositoryModelView | null) => {},
+});

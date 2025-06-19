@@ -10,7 +10,7 @@ import {
 import { RepositoryInteractionType } from "../misc/repository";
 import { subscribeToChanges } from "../misc/subscriptions";
 import { useStatefulRepository } from "../misc/use-repository";
-import { MainRepositoryModelViewContext } from "@/app/page";
+import { MainRepositoryModelViewContext } from "../components/main/repository/repository";
 
 function _deserializeReadings(json: any): ReadingsModelView {
 	return {

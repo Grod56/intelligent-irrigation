@@ -13,7 +13,7 @@ import ControlPanel, {
 import Dashboard, {
 	DashboardModelInteraction,
 } from "./sections/dashboard/Dashboard";
-import { MainRepositoryModelViewContext } from "@/app/page";
+import { MainRepositoryModelViewContext } from "./repository/repository";
 import { useContext, useEffect } from "react";
 
 const Main = function () {
