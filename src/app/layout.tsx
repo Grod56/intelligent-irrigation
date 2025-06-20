@@ -5,7 +5,7 @@ import Footer from "@/lib/components/footer/Footer";
 import Header from "@/lib/components/header/Header";
 
 export const metadata: Metadata = {
-	title: "Smart Farm Irrigation System",
+	title: "Intelligent Irrigation",
 };
 
 export default function RootLayout({
