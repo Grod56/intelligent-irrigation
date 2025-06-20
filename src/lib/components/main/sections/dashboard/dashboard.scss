@@ -82,28 +82,37 @@
 					height: 1em;
 					opacity: 0.7;
 				}
+				.reading-text {
+					@include flexible-container.horizontal(1em);
+					justify-content: space-between;
+					width: 100%;
+				}
+				.weather {
+					.reading-text {
+						align-items: center;
+						.temp {
+							&::after {
+								content: "°C";
+							}
+						}
+					}
+				}
 				.moisture {
 					.icon {
 						color: rgb(15, 150, 204);
+					}
+					.reading-text {
+						.value {
+							&::after {
+								content: "%";
+							}
+						}
 					}
 				}
 			}
 			& > * {
 				@include flexible-container.horizontal(1em);
 				align-items: center;
-				.weather {
-					.reading-text {
-						align-items: center;
-						.temp::after {
-							content: "°C";
-						}
-					}
-				}
-				.moisture {
-					.reading-text::after {
-						content: "%";
-					}
-				}
 			}
 		}
 	}
@@ -205,7 +214,6 @@
 			}
 			button {
 				font-size: 0.9rem;
-				text-transform: uppercase;
 			}
 		}
 	}
@@ -240,7 +248,7 @@
 @media (min-width: 768px) {
 	.dashboard {
 		@include grid-container.grid(4, horizontal, false, true, 1em);
-		padding-inline: 2em;
+		padding-inline: 1.2em;
 		.main-panel {
 			grid-row: 1 / 3;
 			grid-column: 1 / 3;
@@ -257,14 +265,14 @@
 			}
 		}
 		.readings-panel {
-			font-size: 1.1rem;
-			min-width: fit-content;
+			// font-size: 1.1rem;
+			min-width: max-content;
 		}
 		.crop-information-panel {
 			grid-column: 3 / 5;
 		}
 		.water-consumption-panel {
-			grid-column: 1 / 4;
+			grid-column: 1 / 5;
 			.chart-container {
 				height: 12em;
 			}
@@ -275,5 +283,17 @@
 @media (min-width: 1024px) {
 	.dashboard {
 		padding-inline: 4em;
+		.readings-panel {
+			grid-column: unset;
+		}
+		.scheduled-times-panel {
+			grid-column: unset;
+		}
+		.water-consumption-panel {
+			grid-column: 1 / 5;
+			.chart-container {
+				height: 12em;
+			}
+		}
 	}
 }

@@ -95,7 +95,7 @@ const Readings = function ({ model }) {
 					})}
 				/>
 				<span className="reading-text">
-					Weather -{" "}
+					Weather{" "}
 					<span>
 						<span className="temp">{weather.currentTemp}</span>
 						{" | "}
@@ -105,12 +105,14 @@ const Readings = function ({ model }) {
 			</span>
 			<span className="moisture">
 				<FontAwesomeIcon className="icon" icon={faDroplet} />
-				<span className="reading-text">Soil Moisture - {moisture}</span>
+				<span className="reading-text">
+					Soil Moisture <span className="value">{moisture}</span>
+				</span>
 			</span>
 			<span className="last-recorded">
 				<FontAwesomeIcon className="icon" icon={faClock} />
 				<span className="reading-text">
-					Last logged - {timeRecorded.toLocaleTimeString()}
+					Last logged <span>{timeRecorded.toLocaleTimeString()}</span>
 				</span>
 			</span>
 		</div>

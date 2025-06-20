@@ -1,9 +1,10 @@
+import Spinner from "react-bootstrap/Spinner";
 import "./placeholder.scss";
 
 const Placeholder = function () {
 	return (
 		<div className="placeholder">
-			<img src="/spinner.gif" alt="Loading animation" />
+			<Spinner className="spinner" animation="border" />
 		</div>
 	);
 };

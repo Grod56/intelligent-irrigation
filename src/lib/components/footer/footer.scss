@@ -1,12 +1,29 @@
 @use "../../styles/utilities/flexible-container";
+@use "../../styles/utilities/container";
 .footer {
-	@include flexible-container.vertical(1em);
-	@include flexible-container.center;
-	background-color: var(--primary-color-4);
-	padding-block: 2em;
-	padding-inline: 2em;
-	.footer-text {
-		font-size: 0.88rem;
+	@include container.wrapper;
+	& {
+		@include flexible-container.vertical(1em);
+		@include flexible-container.center;
+		background-color: var(--primary-color-3);
+		padding-block: 1.5em;
+		padding-inline: 2em;
+		.footer-content {
+			@include flexible-container.vertical(0.7em);
+			align-items: center;
+			flex-wrap: wrap;
+		}
+		.copyright-text {
+			font-size: 0.88rem;
+		}
+		.weatherapi {
+			img {
+				max-height: 2em;
+			}
+		}
+		hr {
+			margin: 0;
+		}
 	}
 }
 

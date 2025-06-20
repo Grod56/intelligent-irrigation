@@ -19,54 +19,59 @@ $-loading-bar-height: 3px;
 	}
 }
 .main {
-	& {
+	@include flexible-container.vertical;
+	.placeholder-container {
+		flex-grow: 1;
 		@include flexible-container.vertical;
-		.placeholder-container {
-			flex-grow: 1;
-			@include flexible-container.vertical;
-			@include objects.fit-container;
-			@include flexible-container.center;
-		}
-		.dashboard,
-		.control-panel {
-			.content-layer {
-				padding-inline: 1.5em;
+		@include objects.fit-container;
+		@include flexible-container.center;
+		.placeholder {
+			.spinner {
+				font-size: xx-large;
+				color: var(--primary-color-1);
 			}
 		}
-		.control-panel {
-			background-color: var(--secondary-color-1);
-			color: var(--primary-color-1);
+	}
+	.dashboard,
+	.control-panel {
+		.content-layer {
+			padding-inline: 1.5em;
 		}
-		.dashboard {
-			margin-top: calc(-1 * $-loading-bar-height);
-			background: linear-gradient(
-					to bottom,
-					transparent,
-					var(--secondary-color-1)
-				),
-				url("/background-image.jpeg");
-			background-repeat: no-repeat;
-			background-size: cover;
-		}
-		button {
-			border-width: 1px;
-			border-style: solid;
-			border-radius: 6px;
-			font-size: 1.25rem;
-			color: inherit;
-			background-color: transparent;
-			padding: 0.5em;
-			cursor: pointer;
-			&:disabled {
-				@include effects.disabled;
-				cursor: unset;
-			}
+	}
+	.control-panel {
+		background-color: var(--secondary-color-1);
+		color: var(--primary-color-1);
+	}
+	.dashboard {
+		margin-top: calc(-1 * $-loading-bar-height);
+		background: linear-gradient(
+				to bottom,
+				transparent,
+				var(--secondary-color-1)
+			),
+			url("/background-image.jpeg");
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+	button {
+		border-width: 1px;
+		border-style: solid;
+		border-radius: 6px;
+		font-size: 1.25rem;
+		color: inherit;
+		background-color: transparent;
+		padding: 0.5em;
+		cursor: pointer;
+		&:disabled {
+			@include effects.disabled;
+			cursor: unset;
 		}
 	}
 }
 
 @media (min-width: 768px) {
 	.main {
+		min-height: 80vh;
 		.dashboard,
 		.control-panel {
 			.content-layer {

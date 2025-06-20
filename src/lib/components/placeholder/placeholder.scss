@@ -1,4 +1,12 @@
+@use "../../styles/utilities/container";
+@use "../../styles/third-party/bootstrap";
+
 .placeholder {
-	padding-block: 1em;
-	padding-inline: 2em;
+	@include container.wrapper;
+	& {
+		.spinner {
+			height: 2em;
+			width: 2em;
+		}
+	}
 }

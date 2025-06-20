@@ -5,12 +5,12 @@
 	& {
 		@include flexible-container.vertical(1em);
 		.control-panel-content {
-			@include flexible-container.horizontal(2em);
+			@include flexible-container.vertical(2em);
 			@include flexible-container.center;
 			flex-wrap: wrap;
 			.controls {
 				@include flexible-container.vertical(0.5em);
-				min-width: 33%;
+				width: 90%;
 				button {
 					width: 100%;
 					border: 1px solid var(--primary-color-4);
@@ -29,9 +29,8 @@
 			}
 			.information-container {
 				p {
-					font-style: italic;
 					text-wrap-style: auto;
-					font-size: 1.1rem;
+					font-size: 0.88rem;
 				}
 			}
 		}
@@ -41,16 +40,12 @@
 	}
 }
 
-// @media (min-width:768px) {
-// 	.control-panel {
-// 		@include flexible-container.vertical(1em);
-// 		.control-panel-content {
-// 			@include flexible-container.horizontal(2em);
-// 			.scheduled-times-content {
-// 				@include flexible-container.vertical(0.5em);
-// 				flex-wrap: wrap;
-// 				.times {
-// 					@include flexible-container.vertical(0.5em);
-// 					flex-wrap: wrap;
-// 				}}}}
-// }
+@media (min-width: 768px) {
+	.control-panel {
+		.control-panel-content {
+			.controls {
+				width: 33%;
+			}
+		}
+	}
+}

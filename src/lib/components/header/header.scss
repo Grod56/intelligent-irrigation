@@ -1,7 +1,9 @@
 @use "../../styles/utilities/flexible-container";
+
 .header {
 	@include flexible-container.horizontal;
 	@include flexible-container.center;
+
 	background-color: var(--secondary-color-1);
 	color: var(--primary-color-1);
 	padding-inline: 2em;
