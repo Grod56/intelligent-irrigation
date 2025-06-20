@@ -1,0 +1,18 @@
+{
+  "name": "arduino",
+  "version": "1.0.0",
+  "description": "Interface between arduino and the cloud",
+  "license": "ISC",
+  "author": "Garikai Gumbo",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "@google/genai": "^1.4.0",
+    "@supabase/supabase-js": "^2.50.0",
+    "console-stamp": "^3.1.2",
+    "serialport": "^13.0.0"
+  }
+}

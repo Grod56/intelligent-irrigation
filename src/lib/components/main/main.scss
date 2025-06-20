@@ -39,7 +39,12 @@ $-loading-bar-height: 3px;
 		}
 		.dashboard {
 			margin-top: calc(-1 * $-loading-bar-height);
-			background: url("/background-image.jpeg");
+			background: linear-gradient(
+					to bottom,
+					transparent,
+					var(--secondary-color-1)
+				),
+				url("/background-image.jpeg");
 			background-repeat: no-repeat;
 			background-size: cover;
 		}

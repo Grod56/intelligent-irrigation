@@ -91,10 +91,17 @@
 			& > * {
 				@include flexible-container.horizontal(1em);
 				align-items: center;
-				.reading-text {
-					align-items: center;
-					.temp::after {
-						content: "°C";
+				.weather {
+					.reading-text {
+						align-items: center;
+						.temp::after {
+							content: "°C";
+						}
+					}
+				}
+				.moisture {
+					.reading-text::after {
+						content: "%";
 					}
 				}
 			}

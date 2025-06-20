@@ -223,6 +223,7 @@ const Dashboard = function ({ model }) {
 									scheduledTime.setMinutes(
 										Number(parsedString[1])
 									);
+									scheduledTime.setSeconds(0);
 									interact({
 										type: "ADD_TIME",
 										input: { time: scheduledTime },
