@@ -36,6 +36,7 @@ const geminiModel = process.env.GEMINI_MODEL;
 const readingLogFrequency = Number(process.env.DEFAULT_READING_LOG_FREQ);
 let irrigationToggle = false;
 let scheduledTimes = [];
+let nextEvaluationTime;
 let isShutdown = false;
 
 async function getCurrentReadings() {
@@ -63,19 +64,19 @@ async function collectReadings() {
 	}
 }
 
-function processIrrigation(newStatus) {
+async function processIrrigation(newStatus) {
 	if (irrigationToggle == newStatus) return;
 	irrigationToggle = newStatus;
 	if (irrigationToggle) {
-		hardware
+		await hardware
 			.irrigate()
 			.then(() => setStatus("Active"))
 			.then(() => sleep(irrigationDuration))
 			.then(() => hardware.stopIrrigating);
 	} else {
-		hardware.stopIrrigating();
+		await hardware.stopIrrigating();
 	}
-	setStatus("Idle");
+	await setStatus("Idle");
 }
 
 async function monitorScheduledTimes() {
@@ -92,6 +93,52 @@ async function monitorScheduledTimes() {
 		}
 		await sleep(1);
 	}
+}
+
+async function monitorEvaluationTimes() {
+	while (!isShutdown) {
+		if (nextEvaluationTime <= Date.now()) {
+			await performEvaluation();
+			const currentHour = new Date(Date.now()).getHours();
+			if (6 - currentHour > 4) {
+				nextEvaluationTime = new Date().setHours(6, 0, 0, 0);
+			} else if (12 - currentHour > 4) {
+				nextEvaluationTime = new Date().setHours(12, 0, 0, 0);
+			} else {
+				const newEvaluationTime = new Date();
+				newEvaluationTime.setDate(new Date(Date.now()).getDate() + 1);
+				newEvaluationTime.setHours(6, 0, 0, 0);
+				nextEvaluationTime = newEvaluationTime;
+			}
+			console.log(
+				`Next evaluation at: ${nextEvaluationTime.toLocaleString()}`
+			);
+		}
+		await sleep(10);
+	}
+}
+
+async function performEvaluation() {
+	const feedback = await makeAIComputations(
+		geminiModel,
+		irrigationDuration,
+		crop,
+		soilType,
+		await getCurrentReadings(),
+		await retrieveSensorReadingHistory(),
+		weatherApi,
+		config.planted
+	);
+	await setAIFeedback({ ...feedback, model: geminiModel });
+	await clearAllScheduledTimes();
+	scheduledTimes = [];
+	[...feedback.scheduledTimes].forEach(scheduledTime =>
+		scheduleTime(new Date(scheduledTime)).catch(error => {
+			console.error(error.message);
+			Promise.reject(error);
+		})
+	);
+	console.log("AI Evaluation completed successully");
 }
 
 async function shutDown() {
@@ -141,24 +188,8 @@ listenForChanges(
 	}
 );
 collectReadings();
-const feedback = await makeAIComputations(
-	geminiModel,
-	irrigationDuration,
-	crop,
-	soilType,
-	await getCurrentReadings(),
-	await retrieveSensorReadingHistory(),
-	weatherApi,
-	config.planted
-);
-await setAIFeedback({ ...feedback, model: geminiModel });
-
-[...feedback.scheduledTimes].forEach(scheduledTime =>
-	scheduleTime(new Date(scheduledTime)).catch(error => {
-		console.error(error.message);
-		Promise.reject(error);
-	})
-);
+nextEvaluationTime = new Date(Date.now());
+monitorEvaluationTimes();
 
 // --------------------------------------------------------------
 console.log("System activation complete.");

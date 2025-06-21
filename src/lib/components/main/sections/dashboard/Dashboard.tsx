@@ -218,12 +218,11 @@ const Dashboard = function ({ model }) {
 									const parsedString = timeString.split(":");
 									const scheduledTime = new Date(Date.now());
 									scheduledTime.setHours(
-										Number(parsedString[0])
+										Number(parsedString[0]),
+										Number(parsedString[1]),
+										0,
+										0
 									);
-									scheduledTime.setMinutes(
-										Number(parsedString[1])
-									);
-									scheduledTime.setSeconds(0);
 									interact({
 										type: "ADD_TIME",
 										input: { time: scheduledTime },
