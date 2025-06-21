@@ -75,7 +75,7 @@ const WaterChart = function ({
 	entries: { date: Date; waterConsumed: Number }[];
 }) {
 	const data = React.useMemo(
-		() => [{ label: "Water Consumed", data: entries }],
+		() => [{ label: "Water Used", data: entries }],
 		[]
 	);
 
@@ -128,7 +128,8 @@ const Dashboard = function ({ model }) {
 	const { dailyAverage, emitters, rating, entries, duration } =
 		waterConsumption;
 	const timeRecordedString = timeRecorded.toLocaleString("en-US", {
-		dateStyle: "full",
+		dateStyle: "long",
+		timeStyle: "medium",
 	});
 	return (
 		<div className="dashboard" aria-disabled={status == "Inactive"}>

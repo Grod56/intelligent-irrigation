@@ -1,17 +1,12 @@
-import Placeholder from "@/lib/components/placeholder/Placeholder";
 import SiteSection from "@/lib/components/site-section/ui/SiteSection";
+import { ModeledVoidComponent } from "@mvc-react/components";
 import {
-	ConditionalComponent,
-	ModeledVoidComponent,
-} from "@mvc-react/components";
-import {
-	InputModelInteraction,
 	InteractiveModel,
 	ModelInteraction,
 	newReadonlyModel,
 } from "@mvc-react/mvc";
-import "./control-panel.scss";
 import { SystemStatus } from "../../repository/repository";
+import "./control-panel.scss";
 
 export interface ControlPanelModelView {
 	status: SystemStatus;
