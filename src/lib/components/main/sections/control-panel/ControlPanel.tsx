@@ -29,7 +29,7 @@ export type ControlPanelModel = InteractiveModel<
 
 const ControlPanel = function ({ model }) {
 	const { modelView, interact } = model;
-	const { status } = modelView!;
+	const { status: currentStatus } = modelView!;
 
 	return (
 		<div className="control-panel">
@@ -50,7 +50,7 @@ const ControlPanel = function ({ model }) {
 						<button
 							className="force-irrigate"
 							onClick={() => interact({ type: "FORCE_IRRIGATE" })}
-							disabled={status != "Idle"}
+							disabled={currentStatus.status != "Idle"}
 						>
 							Irrigate Now
 						</button>
@@ -59,7 +59,7 @@ const ControlPanel = function ({ model }) {
 							onClick={() =>
 								interact({ type: "STOP_IRRIGATING" })
 							}
-							disabled={status != "Active"}
+							disabled={currentStatus.status != "Active"}
 						>
 							Stop Irrigating
 						</button>
