@@ -2,19 +2,18 @@
 
 .header {
 	@include flexible-container.horizontal;
-	@include flexible-container.center;
 
 	background-color: var(--secondary-color-1);
 	color: var(--primary-color-1);
-	padding-inline: 2em;
+	padding-inline: 1.5em;
 	padding-block: 1em;
 
 	.header-content {
 		@include flexible-container.horizontal(1em);
-		justify-items: center;
+		align-items: center;
 		.header-icon {
-			width: 2em;
-			height: 2em;
+			width: 1.5em;
+			height: 1.5em;
 		}
 	}
 	.header-title {
@@ -27,8 +26,9 @@
 	.header {
 		justify-content: unset;
 		align-items: unset;
+		padding-inline: 2em;
 		.header-title {
-			font-size: 2rem;
+			font-size: 1.8rem;
 		}
 	}
 }

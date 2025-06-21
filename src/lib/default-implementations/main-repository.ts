@@ -26,7 +26,10 @@ function _deserializeReadings(json: any): ReadingsModelView {
 
 function _deserializeJSON(json: any): MainRepositoryModelView {
 	return {
-		status: json.status,
+		status: {
+			...json.status,
+			timeRecorded: new Date(json.status.timeRecorded),
+		},
 		config: { ...json.config, planted: new Date(json.config.planted) },
 		aiFeedback: {
 			...json.aiFeedback,

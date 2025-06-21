@@ -112,12 +112,13 @@ const Dashboard = function ({ model }) {
 	const {
 		readingsModel,
 		chartModel,
-		status,
+		status: currentStatus,
 		aiFeedback,
 		scheduledTimes,
 		config,
 		waterConsumption,
 	} = model.modelView!;
+	const { status, timeRecorded: lastOnline } = currentStatus;
 	const {
 		timeRecorded,
 		model: aIModel,
@@ -165,6 +166,29 @@ const Dashboard = function ({ model }) {
 							</span>
 						</div>
 						<hr />
+						<ConditionalComponent
+							model={newReadonlyModel({
+								condition: status,
+								components: new Map([
+									[
+										"Inactive",
+										() => (
+											<span className="last-online">
+												Last online:{" "}
+												{lastOnline.toLocaleString(
+													"en-us",
+													{
+														dateStyle: "long",
+														timeStyle: "short",
+													}
+												)}
+											</span>
+										),
+									],
+								]),
+								FallBackComponent: () => <></>,
+							})}
+						/>
 						<div className="ai-feedback-panel">
 							<h4 className="title">AI Feedback</h4>
 							<GenerationInfo
@@ -216,7 +240,7 @@ const Dashboard = function ({ model }) {
 							try {
 								if (timeString) {
 									const parsedString = timeString.split(":");
-									const scheduledTime = new Date(Date.now());
+									const scheduledTime = new Date();
 									scheduledTime.setHours(
 										Number(parsedString[0]),
 										Number(parsedString[1]),
@@ -273,7 +297,7 @@ const Dashboard = function ({ model }) {
 				</Card>
 			</div>
 			<div className="water-consumption-panel">
-				<Card title="Water Consumption">
+				<Card title="Water Usage">
 					<div className="metrics">
 						<div className="daily-avg">
 							<span className="avg-text">Daily Average </span>
@@ -287,7 +311,7 @@ const Dashboard = function ({ model }) {
 					</div>
 					<hr />
 					<div className="water-consumption-series">
-						<span className="title">Water Consumption Series</span>
+						<span className="title">Water Usage Series</span>
 						<WaterChart entries={entries} />
 					</div>
 				</Card>

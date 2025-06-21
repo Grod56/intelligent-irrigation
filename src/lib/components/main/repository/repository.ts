@@ -7,7 +7,10 @@ import { InputModelInteraction, ModelInteraction } from "@mvc-react/mvc";
 import { ChartModel, ReadingsModel } from "../content-models/content-models";
 import { createContext } from "react";
 
-export type SystemStatus = "Active" | "Idle" | "Inactive";
+export type SystemStatus = {
+	status: "Active" | "Idle" | "Inactive";
+	timeRecorded: Date;
+};
 
 export type AIFeedback = {
 	feedback: string;

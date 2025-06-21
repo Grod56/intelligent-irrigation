@@ -14,7 +14,7 @@ async function getStatus() {
 		.select()
 		.order("timeRecorded", { ascending: false });
 	if (data == null) throw new Error("Supabase returned null on request");
-	const status = data[0].status;
+	const status = data[0];
 	return status;
 }
 

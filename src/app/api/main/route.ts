@@ -20,8 +20,8 @@ export async function POST(req: NextRequest) {
 				"ADD_TIME",
 				{ time: Date }
 			>;
-			const time = new Date(input.time);
-			await addTime(time.getHours(), time.getMinutes());
+			const scheduledTime = new Date(input.time);
+			await addTime(scheduledTime);
 			break;
 		case "FORCE_IRRIGATE":
 			await toggleIrrigation(true);

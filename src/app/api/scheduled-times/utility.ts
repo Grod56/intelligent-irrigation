@@ -9,10 +9,7 @@ export async function getScheduledTimes() {
 	return scheduledTimes;
 }
 
-export async function addTime(hours: number, minutes: number) {
-	const scheduledTime = new Date(Date.now());
-	scheduledTime.setHours(hours);
-	scheduledTime.setMinutes(minutes);
+export async function addTime(scheduledTime: Date) {
 	const { error } = await supabase
 		.from(RELATION)
 		.insert({ time: scheduledTime.toISOString() });
