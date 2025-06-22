@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ProgressBar from "react-bootstrap/esm/ProgressBar";
 import "./loading-bar.scss";
-import { sleep } from "@/lib/misc/utilities";
+import { sleep } from "../../../../shared/lib/utilities";
 
 const LoadingBar = function () {
 	const [progressValue, setProgressValue] = useState(1);

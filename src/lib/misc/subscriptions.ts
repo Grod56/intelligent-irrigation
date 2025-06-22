@@ -3,7 +3,6 @@ import {
 	startPolling,
 	subscribeToChannel,
 } from "../../../shared/lib/cloud";
-import supabase from "./third-party/supabase";
 
 export function subscribeToChanges(isRealtime: boolean, callback: () => void) {
 	if (isRealtime) {
