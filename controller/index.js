@@ -9,6 +9,7 @@ import {
 	retrieveSensorReadingHistory,
 	retrieveConfig,
 	listenForChanges,
+	shutdownCloud,
 } from "./lib/cloud.js";
 import { Hardware } from "./lib/hardware.js";
 import { WeatherAPI } from "./lib/weather-api.js";
@@ -99,22 +100,22 @@ async function monitorEvaluationTimes() {
 	while (!isShutdown) {
 		if (nextEvaluationTime <= Date.now()) {
 			await performEvaluation();
+			const newEvaluationTime = new Date();
 			const currentHour = new Date(Date.now()).getHours();
-			if (6 - currentHour > 4) {
-				nextEvaluationTime = new Date().setHours(6, 0, 0, 0);
-			} else if (12 - currentHour > 4) {
-				nextEvaluationTime = new Date().setHours(12, 0, 0, 0);
+			if (6 - currentHour > 3) {
+				newEvaluationTime.setHours(6, 0, 0, 0);
+			} else if (12 - currentHour > 3) {
+				newEvaluationTime.setHours(12, 0, 0, 0);
 			} else {
-				const newEvaluationTime = new Date();
 				newEvaluationTime.setDate(new Date(Date.now()).getDate() + 1);
 				newEvaluationTime.setHours(6, 0, 0, 0);
-				nextEvaluationTime = newEvaluationTime;
 			}
+			nextEvaluationTime = newEvaluationTime;
 			console.log(
 				`Next evaluation at: ${nextEvaluationTime.toLocaleString()}`
 			);
 		}
-		await sleep(10);
+		await sleep(1);
 	}
 }
 
@@ -145,54 +146,64 @@ async function shutDown() {
 	console.log("Shutting down");
 	isShutdown = true;
 	await setStatus("Inactive")
+		.then(() => shutdownCloud())
 		.then(() => hardware.shutdown())
 		.then(() => console.log("Shut down"))
 		.then(process.exit);
 }
 
 // Execution ----------------------------------------------------
+try {
+	await clearAllScheduledTimes();
+	await setStatus("Idle");
+	monitorScheduledTimes();
+	listenForChanges(
+		false,
+		({ toggle }) => {
+			processIrrigation(toggle);
+		},
+		({ record }) => {
+			const scheduledTime = new Date(record.time);
+			scheduledTimes = [...scheduledTimes, scheduledTime];
+			console.log(
+				`Irrigation scheduled for ${scheduledTime.toTimeString()}`
+			);
+		},
+		() => {
+			getCurrentReadings()
+				.then(
+					({ moisture, currentTemp, maxTemp, currentCondition }) => {
+						console.log(
+							`Weather: %d / %d, %s; Sensors: Moisture: %d`,
+							currentTemp,
+							maxTemp,
+							currentCondition,
+							moisture
+						);
+						return recordReadings(
+							moisture,
+							currentTemp,
+							maxTemp,
+							currentCondition
+						);
+					}
+				)
+				.catch(error => {
+					console.error(String(error));
+					Promise.reject(error);
+				});
+		}
+	);
+	collectReadings();
+	nextEvaluationTime = new Date(Date.now());
+	monitorEvaluationTimes();
 
-await clearAllScheduledTimes();
-await setStatus("Idle");
-monitorScheduledTimes();
-listenForChanges(
-	({ toggle }) => {
-		processIrrigation(toggle);
-	},
-	({ record }) => {
-		const scheduledTime = new Date(record.time);
-		scheduledTimes = [...scheduledTimes, scheduledTime];
-		console.log(`Irrigation scheduled for ${scheduledTime.toTimeString()}`);
-	},
-	() => {
-		getCurrentReadings()
-			.then(({ moisture, currentTemp, maxTemp, currentCondition }) => {
-				console.log(
-					`Weather: %d / %d, %s; Sensors: Moisture: %d`,
-					currentTemp,
-					maxTemp,
-					currentCondition,
-					moisture
-				);
-				return recordReadings(
-					moisture,
-					currentTemp,
-					maxTemp,
-					currentCondition
-				);
-			})
-			.catch(error => {
-				console.error(String(error));
-				Promise.reject(error);
-			});
-	}
-);
-collectReadings();
-nextEvaluationTime = new Date(Date.now());
-monitorEvaluationTimes();
+	// --------------------------------------------------------------
+	console.log("System activation complete.");
 
-// --------------------------------------------------------------
-console.log("System activation complete.");
-
-process.on("SIGINT", shutDown);
+	process.on("SIGINT", shutDown);
+} catch (error) {
+	console.error(error.message ? error.message : error);
+	shutDown();
+}
 process.on("SIGTERM", () => process.exit(1));

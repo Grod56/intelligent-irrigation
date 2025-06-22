@@ -1,25 +1,20 @@
+import {
+	pollForChanges,
+	startPolling,
+	subscribeToChannel,
+} from "../../../shared/lib/cloud";
 import supabase from "./third-party/supabase";
 
-export function subscribeToChanges(callback: () => void) {
-	supabase
-		.channel("topic:scheduledtimes", {
-			// Self broadcast to fix no broadcasts sent due to perceived identical client maybe?
-			config: { private: true, broadcast: { self: true } },
-		})
-		.on("broadcast", { event: "INSERT" }, callback)
-		.subscribe();
-	supabase
-		.channel("topic:readings", {
-			config: { private: true, broadcast: { self: true } },
-		})
-		.on("broadcast", { event: "INSERT" }, callback)
-		.subscribe();
-	supabase
-		.channel("topic:status", {
-			config: { private: true, broadcast: { self: true } },
-		})
-		.on("broadcast", { event: "INSERT" }, callback)
-		.subscribe();
-
+export function subscribeToChanges(isRealtime: boolean, callback: () => void) {
+	if (isRealtime) {
+		subscribeToChannel("scheduledtimes", "INSERT", callback);
+		subscribeToChannel("readings", "INSERT", callback);
+		subscribeToChannel("status", "INSERT", callback);
+	} else {
+		pollForChanges("scheduledtimes", "INSERT", callback);
+		pollForChanges("readings", "INSERT", callback);
+		pollForChanges("status", "INSERT", callback);
+		startPolling();
+	}
 	console.log("Listening for system changes");
 }

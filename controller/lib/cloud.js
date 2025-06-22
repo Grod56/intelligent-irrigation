@@ -1,50 +1,27 @@
+import {
+	pollForChanges,
+	shutdown,
+	startPolling,
+	subscribeToChannel,
+} from "../../shared/lib/cloud.js";
 import supabase from "../supabase-client.js";
-import { sleep } from "./utilities.js";
-
-function _subscribeToChannel(topic, event, callback) {
-	const channelName = `topic:${topic}`;
-	function _resubscribeToChannel() {
-		supabase
-			.channel(channelName)
-			.unsubscribe()
-			.then(status => {
-				if (status == "ok") {
-					_subscribeToChannel(topic, event, callback);
-				} else {
-					return Promise.reject(status);
-				}
-			})
-			.catch(error => {
-				console.error(`Reconnection error: '${error}'`);
-				sleep(10).then(_resubscribeToChannel());
-			});
-	}
-	supabase
-		.channel(channelName, {
-			config: { private: true, broadcast: { self: true } },
-		})
-		.on("broadcast", { event }, message => {
-			const payload = message.payload;
-			callback(payload);
-		})
-		.subscribe(status => {
-			if (status == "CHANNEL_ERROR") {
-				console.log(`Reconnecting to '${topic}'`);
-				_resubscribeToChannel();
-			} else {
-				console.log(`Channel status '${topic}': ${status}`);
-			}
-		});
-}
 
 export function listenForChanges(
+	isRealtime,
 	irrigationCallback,
 	scheduledTimeCallback,
 	readingsRequestCallback
 ) {
-	_subscribeToChannel("irrigation", "toggle", irrigationCallback);
-	_subscribeToChannel("scheduledtimes", "INSERT", scheduledTimeCallback);
-	_subscribeToChannel("readings", "request", readingsRequestCallback);
+	if (isRealtime) {
+		subscribeToChannel("irrigation", "toggle", irrigationCallback);
+		subscribeToChannel("scheduledtimes", "INSERT", scheduledTimeCallback);
+		subscribeToChannel("readings", "request", readingsRequestCallback);
+	} else {
+		pollForChanges("irrigation", "toggle", irrigationCallback);
+		pollForChanges("scheduledtimes", "INSERT", scheduledTimeCallback);
+		pollForChanges("readings", "request", readingsRequestCallback);
+		startPolling();
+	}
 }
 
 export async function retrieveConfig() {
@@ -104,4 +81,8 @@ export async function setAIFeedback(feedback) {
 		model: feedback.model,
 	});
 	if (error) throw error;
+}
+
+export async function shutdownCloud() {
+	await shutdown();
 }

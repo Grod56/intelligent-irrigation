@@ -106,7 +106,7 @@ export function useMainRepository(): MainRepositoryModel {
 	});
 
 	const changesCallback = useCallback(() => {
-		subscribeToChanges(() => {
+		subscribeToChanges(false, () => {
 			interact({
 				type: RepositoryInteractionType.RETRIEVE,
 			});
