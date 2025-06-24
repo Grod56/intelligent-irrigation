@@ -36,8 +36,10 @@ export async function POST(req: NextRequest) {
 			break;
 		case "REQUEST_NEW_READINGS":
 			await requestReadings();
+			break;
 		case "TOGGLE_SYSTEM":
 			await toggleSystem();
+			break;
 	}
 	return new Response(JSON.stringify(await getMainData()), {
 		status: 201,

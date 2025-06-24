@@ -1,5 +1,6 @@
 import { SerialPort, ReadlineParser } from "serialport";
 import { EventEmitter } from "node:events";
+import { sleep } from "../../shared/lib/utilities.js";
 
 export class Hardware {
 	constructor(serialPath, serialBaudRate) {
@@ -55,7 +56,7 @@ export class Hardware {
 			});
 		});
 		while (!this._writable) {
-			await sleep(0.1);
+			await sleep(1);
 		}
 		this._writable = false;
 		this._serialPort.write(`${orderNo}|${message}\n`);

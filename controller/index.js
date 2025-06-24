@@ -177,28 +177,23 @@ async function main() {
 			);
 		},
 		() => {
-			getCurrentReadings()
-				.then(
-					({ moisture, currentTemp, maxTemp, currentCondition }) => {
-						console.log(
-							`Weather: %d / %d, %s; Sensors: Moisture: %d`,
-							currentTemp,
-							maxTemp,
-							currentCondition,
-							moisture
-						);
-						return recordReadings(
-							moisture,
-							currentTemp,
-							maxTemp,
-							currentCondition
-						);
-					}
-				)
-				.catch(error => {
-					console.error(String(error));
-					Promise.reject(error);
-				});
+			getCurrentReadings().then(
+				({ moisture, currentTemp, maxTemp, currentCondition }) => {
+					console.log(
+						`Weather: %d / %d, %s; Sensors: Moisture: %d`,
+						currentTemp,
+						maxTemp,
+						currentCondition,
+						moisture
+					);
+					return recordReadings(
+						moisture,
+						currentTemp,
+						maxTemp,
+						currentCondition
+					);
+				}
+			);
 		},
 		async ({ record }) => {
 			if (status == "Disabled") {
