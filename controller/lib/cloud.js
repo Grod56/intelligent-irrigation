@@ -3,7 +3,7 @@ import {
 	shutdown,
 	startPolling,
 	subscribeToChannel,
-} from "../../shared/lib/cloud.js";
+} from "../../shared/lib/cloud.mjs";
 import supabase from "../supabase-client.js";
 
 export function listenForChanges(

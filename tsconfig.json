@@ -27,8 +27,9 @@
 		"**/*.ts",
 		"**/*.tsx",
 		".next/types/**/*.ts",
-		"shared/**/*.js",
-		"src/lib/misc/third-party/supabase.js"
+		"src/lib/misc/third-party/supabase.mjs",
+		"shared/lib/utilities.mjs",
+		"shared/lib/cloud.mjs"
 	],
 	"exclude": ["node_modules"]
 }

@@ -2,7 +2,7 @@ import {
 	pollForChanges,
 	startPolling,
 	subscribeToChannel,
-} from "../../../shared/lib/cloud";
+} from "../../../shared/lib/cloud.mjs";
 
 export function subscribeToChanges(isRealtime: boolean, callback: () => void) {
 	if (isRealtime) {

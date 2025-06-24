@@ -1,6 +1,6 @@
 import { SerialPort, ReadlineParser } from "serialport";
 import { EventEmitter } from "node:events";
-import { sleep } from "../../shared/lib/utilities.js";
+import { sleep } from "../../shared/lib/utilities.mjs";
 
 export class Hardware {
 	constructor(serialPath, serialBaudRate) {

@@ -15,7 +15,7 @@ import { Hardware } from "./lib/hardware.js";
 import { WeatherAPI } from "./lib/weather-api.js";
 import { makeAIComputations } from "./lib/ai.js";
 import consoleStamp from "console-stamp";
-import { sleep } from "../shared/lib/utilities.js";
+import { sleep } from "../shared/lib/utilities.mjs";
 
 // Config ------------------------------------------------------
 consoleStamp(console);

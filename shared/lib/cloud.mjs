@@ -1,5 +1,5 @@
-import supabase from "../../src/lib/misc/third-party/supabase.js";
-import { sleep } from "./utilities.js";
+import supabase from "../../src/lib/misc/third-party/supabase.mjs";
+import { sleep } from "./utilities.mjs";
 
 const polledChannelCallbacks = new Map();
 let isPolling = false;
