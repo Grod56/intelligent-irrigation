@@ -1,4 +1,4 @@
-import supabase from "@/lib/misc/third-party/supabase";
+import supabase from "@/lib/misc/third-party/supabase.mjs";
 
 export async function getAIFeedback() {
 	const { data, error } = await supabase

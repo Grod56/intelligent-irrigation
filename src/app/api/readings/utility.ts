@@ -1,5 +1,5 @@
 import { ReadingsModelView } from "@/lib/components/main/content-models/content-models";
-import supabase from "@/lib/misc/third-party/supabase";
+import supabase from "@/lib/misc/third-party/supabase.mjs";
 
 export async function getReadings(type: string | null) {
 	const { data, error } = await supabase

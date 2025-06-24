@@ -1,6 +1,6 @@
 import { ChartModelView } from "@/lib/components/main/content-models/content-models";
 import { MainRepositoryModelView } from "@/lib/components/main/repository/repository";
-import supabase from "@/lib/misc/third-party/supabase";
+import supabase from "@/lib/misc/third-party/supabase.mjs";
 import { newReadonlyModel } from "@mvc-react/mvc";
 import { getScheduledTimes } from "../scheduled-times/utility";
 import { getReadings } from "../readings/utility";

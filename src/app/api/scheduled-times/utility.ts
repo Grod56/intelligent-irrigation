@@ -1,4 +1,4 @@
-import supabase from "@/lib/misc/third-party/supabase";
+import supabase from "@/lib/misc/third-party/supabase.mjs";
 
 const RELATION = "ScheduledTime";
 
