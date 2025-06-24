@@ -1,4 +1,5 @@
 import { SerialPort, ReadlineParser } from "serialport";
+import { EventEmitter } from "node:events";
 
 export class Hardware {
 	constructor(serialPath, serialBaudRate) {
@@ -7,30 +8,37 @@ export class Hardware {
 			path: serialPath,
 			baudRate: serialBaudRate,
 		});
+		const eventOrders = new EventEmitter();
 		serialPort.on("open", () => {
+			serialPort.flush();
+			serialPort.pipe(parser);
 			console.log("Hardware is ready");
 		});
-		serialPort.pipe(parser);
+		parser.on("data", serialData => {
+			const { id, payload } = JSON.parse(serialData);
+			eventOrders.emit(id, payload);
+		});
+		this._eventOrders = eventOrders;
+		this._orderNo = 0;
+		this._writable = true;
 		this._parser = parser;
 		this._serialPort = serialPort;
 	}
 
 	async irrigate() {
-		const { payload } = await this._communicate("on");
-		console.log(payload);
-		// Blocks unless I manually return a resolve for some reason
-		return Promise.resolve();
+		const response = await this._communicate("on");
+		console.log(response);
+		return response;
 	}
 
 	async stopIrrigating() {
-		const { payload } = await this._communicate("off");
-		console.log(payload);
-		return Promise.resolve();
+		const response = await this._communicate("off");
+		console.log(response);
+		return response;
 	}
 
 	async sense() {
-		const { payload } = await this._communicate("sense");
-		return payload;
+		return this._communicate("sense");
 	}
 
 	async shutdown() {
@@ -40,13 +48,18 @@ export class Hardware {
 	}
 
 	async _communicate(message) {
-		return new Promise(resolve => {
-			this._parser.once("data", serialData => {
-				const json = JSON.parse(serialData);
-				resolve(json);
+		const orderNo = String(this._orderNo++);
+		const promise = new Promise(resolve => {
+			this._eventOrders.once(orderNo, payload => {
+				resolve(payload);
 			});
-			this._serialPort.write(`${message}\n`);
-			this._serialPort.drain();
 		});
+		while (!this._writable) {
+			await sleep(0.1);
+		}
+		this._writable = false;
+		this._serialPort.write(`${orderNo}|${message}\n`);
+		this._serialPort.drain(() => (this._writable = true));
+		return promise;
 	}
 }

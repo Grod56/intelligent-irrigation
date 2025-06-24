@@ -2,7 +2,12 @@ import { MainRepositoryModelInteraction } from "@/lib/components/main/repository
 import { InputModelInteraction } from "@mvc-react/mvc";
 import { NextRequest } from "next/server";
 import { addTime } from "../scheduled-times/utility";
-import { getMainData, requestReadings, toggleIrrigation } from "./utility";
+import {
+	getMainData,
+	requestReadings,
+	toggleIrrigation,
+	toggleSystem,
+} from "./utility";
 
 export async function GET(_: NextRequest) {
 	return new Response(JSON.stringify(await getMainData()), {
@@ -31,6 +36,8 @@ export async function POST(req: NextRequest) {
 			break;
 		case "REQUEST_NEW_READINGS":
 			await requestReadings();
+		case "TOGGLE_SYSTEM":
+			await toggleSystem();
 	}
 	return new Response(JSON.stringify(await getMainData()), {
 		status: 201,

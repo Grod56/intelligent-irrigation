@@ -39,11 +39,13 @@ let irrigationToggle = false;
 let scheduledTimes = [];
 let nextEvaluationTime;
 let isShutdown = false;
+let status;
 
 async function getCurrentReadings() {
 	const { currentTemp, maxTemp, currentCondition } =
 		await weatherApi.getCurrentWeather();
-	const { moisture } = await hardware.sense();
+	const response = await hardware.sense();
+	const { moisture } = response;
 	return { moisture, currentTemp, maxTemp, currentCondition };
 }
 
@@ -65,32 +67,37 @@ async function collectReadings() {
 	}
 }
 
-async function processIrrigation(newStatus) {
-	if (irrigationToggle == newStatus) return;
-	irrigationToggle = newStatus;
-	if (irrigationToggle) {
-		await hardware
-			.irrigate()
-			.then(() => setStatus("Active"))
-			.then(() => sleep(irrigationDuration))
-			.then(() => hardware.stopIrrigating);
-	} else {
-		await hardware.stopIrrigating();
+async function processIrrigation(toggle) {
+	if (status != "Disabled") {
+		if (irrigationToggle == toggle) return;
+		irrigationToggle = toggle;
+		if (irrigationToggle) {
+			await hardware
+				.irrigate()
+				.then(() => setStatus("Active"))
+				.then(() => sleep(irrigationDuration))
+				.then(() => hardware.stopIrrigating);
+		} else {
+			await hardware.stopIrrigating();
+		}
+		if (status != "Disabled") await setStatus("Idle");
 	}
-	await setStatus("Idle");
 }
 
 async function monitorScheduledTimes() {
 	while (!isShutdown) {
-		if (
-			scheduledTimes.filter(scheduledTime => scheduledTime <= Date.now())
-				.length > 0
-		) {
-			processIrrigation(true);
-			await clearPastScheduledTimes()
-				.then(retrieveScheduledTimes)
-				// Too lazy to just remove locally;
-				.then(retrievedTimes => (scheduledTimes = retrievedTimes));
+		if (status != "Disabled") {
+			if (
+				scheduledTimes.filter(
+					scheduledTime => scheduledTime <= Date.now()
+				).length > 0
+			) {
+				processIrrigation(true);
+				await clearPastScheduledTimes()
+					.then(retrieveScheduledTimes)
+					// Too lazy to just remove locally;
+					.then(retrievedTimes => (scheduledTimes = retrievedTimes));
+			}
 		}
 		await sleep(1);
 	}
@@ -142,7 +149,7 @@ async function performEvaluation() {
 	console.log("AI Evaluation completed successully");
 }
 
-async function shutDown() {
+async function shutdown() {
 	console.log("Shutting down");
 	isShutdown = true;
 	await setStatus("Inactive")
@@ -153,7 +160,7 @@ async function shutDown() {
 }
 
 // Execution ----------------------------------------------------
-try {
+async function main() {
 	await clearAllScheduledTimes();
 	await setStatus("Idle");
 	monitorScheduledTimes();
@@ -192,6 +199,14 @@ try {
 					console.error(String(error));
 					Promise.reject(error);
 				});
+		},
+		async ({ record }) => {
+			if (status == "Disabled") {
+				await hardware.stopIrrigating();
+				irrigationToggle = false;
+			}
+			status = record.status;
+			console.log(`System is ${status}`);
 		}
 	);
 	collectReadings();
@@ -200,10 +215,16 @@ try {
 
 	// --------------------------------------------------------------
 	console.log("System activation complete.");
-
-	process.on("SIGINT", shutDown);
-} catch (error) {
-	console.error(error.message ? error.message : error);
-	shutDown();
 }
+
+process.on("SIGINT", shutdown);
 process.on("SIGTERM", () => process.exit(1));
+process.on("unhandledRejection", async reason => {
+	console.error(reason.message ? reason.message : reason);
+	await shutdown();
+});
+
+main().catch(error => {
+	console.error(error.message ? error.message : error);
+	shutdown();
+});

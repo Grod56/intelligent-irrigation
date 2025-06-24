@@ -8,7 +8,7 @@ import { ChartModel, ReadingsModel } from "../content-models/content-models";
 import { createContext } from "react";
 
 export type SystemStatus = {
-	status: "Active" | "Idle" | "Inactive";
+	status: "Active" | "Idle" | "Inactive" | "Disabled";
 	timeRecorded: Date;
 };
 
@@ -52,7 +52,8 @@ export type MainRepositoryModelInteraction =
 	| InputModelInteraction<"ADD_TIME", { time: Date }>
 	| ModelInteraction<"FORCE_IRRIGATE">
 	| ModelInteraction<"STOP_IRRIGATING">
-	| ModelInteraction<"REQUEST_NEW_READINGS">;
+	| ModelInteraction<"REQUEST_NEW_READINGS">
+	| ModelInteraction<"TOGGLE_SYSTEM">;
 
 export type MainRepositoryModel = RepositoryModel<
 	MainRepositoryModelView,

@@ -15,7 +15,8 @@ export interface ControlPanelModelView {
 export type ControlPanelModelInteraction =
 	| ModelInteraction<"REFRESH_DATA">
 	| ModelInteraction<"FORCE_IRRIGATE">
-	| ModelInteraction<"STOP_IRRIGATING">;
+	| ModelInteraction<"STOP_IRRIGATING">
+	| ModelInteraction<"TOGGLE_SYSTEM">;
 
 export type ControlPanelModel = InteractiveModel<
 	ControlPanelModelView,
@@ -40,7 +41,7 @@ const ControlPanel = function ({ model }) {
 							className="refresh-data"
 							onClick={() => interact({ type: "REFRESH_DATA" })}
 						>
-							Refresh Data
+							Refresh
 						</button>
 						<button
 							className="force-irrigate"
@@ -57,6 +58,15 @@ const ControlPanel = function ({ model }) {
 							disabled={currentStatus.status != "Active"}
 						>
 							Stop Irrigating
+						</button>
+						<button
+							className="toggle-system"
+							onClick={() => interact({ type: "TOGGLE_SYSTEM" })}
+							disabled={currentStatus.status == "Inactive"}
+						>
+							{currentStatus.status == "Disabled"
+								? "Enable System"
+								: "Disable System"}
 						</button>
 					</div>
 					<div className="information-container">

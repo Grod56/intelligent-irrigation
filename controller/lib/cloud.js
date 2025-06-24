@@ -10,16 +10,19 @@ export function listenForChanges(
 	isRealtime,
 	irrigationCallback,
 	scheduledTimeCallback,
-	readingsRequestCallback
+	readingsRequestCallback,
+	statusChangeCallback
 ) {
 	if (isRealtime) {
 		subscribeToChannel("irrigation", "toggle", irrigationCallback);
 		subscribeToChannel("scheduledtimes", "INSERT", scheduledTimeCallback);
 		subscribeToChannel("readings", "request", readingsRequestCallback);
+		subscribeToChannel("status", "INSERT", statusChangeCallback);
 	} else {
 		pollForChanges("irrigation", "toggle", irrigationCallback);
 		pollForChanges("scheduledtimes", "INSERT", scheduledTimeCallback);
 		pollForChanges("readings", "request", readingsRequestCallback);
+		pollForChanges("status", "INSERT", statusChangeCallback);
 		startPolling();
 	}
 }

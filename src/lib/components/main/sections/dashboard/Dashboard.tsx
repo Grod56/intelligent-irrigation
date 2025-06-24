@@ -152,6 +152,16 @@ const Dashboard = function ({ model }) {
 												/>
 											),
 										],
+										[
+											"Disabled",
+											() => (
+												<Spinner
+													className="status-icon"
+													animation="grow"
+													data-status={status}
+												/>
+											),
+										],
 									]),
 									FallBackComponent: () => (
 										<Spinner

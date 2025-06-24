@@ -1,119 +1,118 @@
 #include <Arduino.h>
 
 // Declarations
-void processInput(String message);
-void processIrrigation(boolean newStatus);
-void sendSenseData();
-void outputMessage(String type, String payload);
+void processInput(String message, String id);
+String processIrrigation(boolean newStatus);
+String processSenseData();
+void outputMessage(String id, String payload);
 String jsonEntry(String key, String value);
 String jsonEntry(String key, float value);
 String stringify(String string);
 
 boolean isIrrigating;
+int sensorPower;
 int sensor;
 int relay;
-int sensorPower;
 
 void setup()
 {
-  isIrrigating = false;
-  sensor = 0;
-  sensorPower = 10;
-  relay = 9;
-  // This first to avoid potential transient switching
-  digitalWrite(relay, HIGH);
-  pinMode(sensorPower, OUTPUT);
-  pinMode(relay, OUTPUT);
-  Serial.begin(9600);
+	isIrrigating = false;
+	sensorPower = 10;
+	sensor = 0;
+	relay = 9;
+	// This first to avoid potential transient switching
+	digitalWrite(relay, HIGH);
+	pinMode(sensorPower, OUTPUT);
+	pinMode(relay, OUTPUT);
+	Serial.begin(115200);
 }
 
 void loop()
 {
-  if (Serial.available() > 0)
-  {
-    String input = Serial.readStringUntil('\n');
-    processInput(input);
-  }
-  delay(500);
+	if (Serial.available() > 0)
+	{
+		String id = Serial.readStringUntil('|');
+		String input = Serial.readStringUntil('\n');
+		processInput(input, id);
+	}
+	delay(500);
 }
 
-void processInput(String input)
+void processInput(String input, String id)
 {
-  input.trim();
-  if (input.equalsIgnoreCase("on"))
-  {
-    processIrrigation(true);
-  }
-  else if (input.equalsIgnoreCase("off"))
-  {
-    processIrrigation(false);
-  }
-  else if (input.equalsIgnoreCase("sense"))
-  {
-    sendSenseData();
-  }
-  else
-  {
-    outputMessage("error", stringify("The option provided is invalid"));
-  }
+	input.trim();
+	String payload;
+	if (input.equalsIgnoreCase("on"))
+	{
+		payload = processIrrigation(true);
+	}
+	else if (input.equalsIgnoreCase("off"))
+	{
+		payload = processIrrigation(false);
+	}
+	else if (input.equalsIgnoreCase("sense"))
+	{
+		payload = processSenseData();
+	}
+	else
+	{
+		payload = stringify("The option provided is invalid");
+	}
+	outputMessage(id, payload);
 }
 
-void processIrrigation(boolean newStatus)
+String processIrrigation(boolean newStatus)
 {
-  if (isIrrigating != newStatus)
-  {
-    if (newStatus)
-    {
-      digitalWrite(relay, LOW);
-      outputMessage("info", stringify("Irrigation initiated"));
-    }
-    else
-    {
-      digitalWrite(relay, HIGH);
-      outputMessage("info", stringify("Irrigation stopped"));
-    }
-    isIrrigating = newStatus;
-  }
-  else
-  {
-    String state = newStatus ? "on" : "off";
-    outputMessage("info", stringify("The irrigation system is already in this state (" + state + ")"));
-  }
+	if (isIrrigating != newStatus)
+	{
+		isIrrigating = newStatus;
+		if (newStatus)
+		{
+			digitalWrite(relay, LOW);
+			return stringify("Irrigation initiated");
+		}
+		else
+		{
+			digitalWrite(relay, HIGH);
+			return stringify("Irrigation stopped");
+		}
+	}
+	else
+	{
+		String status = newStatus ? "on" : "off";
+		return stringify("The irrigation system is already in this state (" + status + ")");
+	}
 }
 
-void sendSenseData()
+String processSenseData()
 {
-  digitalWrite(sensorPower, HIGH);
-  delay(100);
-  int moistureRaw = analogRead(0);
-  long vmc = map(moistureRaw, 1023, 0, 0, 100);
-  outputMessage("sense",
-                "{" +
-                    jsonEntry("moisture", vmc) +
-                    "}");
-  digitalWrite(sensorPower, LOW);
+	digitalWrite(sensorPower, HIGH);
+	delay(100);
+	int moistureRaw = analogRead(0);
+	long vmc = map(moistureRaw, 1023, 0, 0, 100);
+	digitalWrite(sensorPower, LOW);
+	return "{" + jsonEntry("moisture", vmc) + "}";
 }
 
-void outputMessage(String type, String payload)
+void outputMessage(String id, String payload)
 {
-  Serial.println(
-      "{" +
-      jsonEntry("type", stringify(type)) +
-      ", " +
-      jsonEntry("payload", payload) +
-      "}");
+	Serial.println("{" +
+				   jsonEntry("id", stringify(id)) +
+				   ", " +
+				   jsonEntry("payload", payload) +
+				   "}");
 }
 
 String jsonEntry(String key, String value)
 {
-  return stringify(key) + ": " + value;
+	return stringify(key) + ": " + value;
 }
 String jsonEntry(String key, float value)
 {
-  return stringify(key) + ": " + value;
+	return stringify(key) + ": " + value;
 }
 
 String stringify(String string)
 {
-  return "\"" + string + "\"";
+	return "\"" + string + "\"";
 }

@@ -47,10 +47,18 @@ export async function toggleIrrigation(ison: boolean) {
 	const { error } = await supabase.rpc("toggleirrigation", {
 		ison,
 	});
-	if (error) throw new Error(`Error communicating with database: ${error}`);
+	if (error)
+		throw new Error(`Error communicating with database: ${error.message}`);
 }
 
 export async function requestReadings() {
 	const { error } = await supabase.rpc("requestreadings");
-	if (error) throw new Error(`Error communicating with database: ${error}`);
+	if (error)
+		throw new Error(`Error communicating with database: ${error.message}`);
+}
+
+export async function toggleSystem() {
+	const { error } = await supabase.rpc("togglesystem");
+	if (error)
+		throw new Error(`Error communicating with database: ${error.message}`);
 }
