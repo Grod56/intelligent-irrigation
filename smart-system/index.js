@@ -76,7 +76,8 @@ async function processIrrigation(toggle) {
 				.irrigate()
 				.then(() => setStatus("Active"))
 				.then(() => sleep(irrigationDuration))
-				.then(() => hardware.stopIrrigating);
+				.then(() => hardware.stopIrrigating())
+				.then(() => (irrigationToggle = false));
 		} else {
 			await hardware.stopIrrigating();
 		}

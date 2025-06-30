@@ -32,7 +32,6 @@ export async function retrieveConfig() {
 	if (error) throw error;
 	return data[0];
 }
-
 export async function scheduleTime(scheduledTime) {
 	const { error } = await supabase
 		.from("ScheduledTime")
