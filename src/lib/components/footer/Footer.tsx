@@ -19,14 +19,6 @@ const Footer = () => {
 						alt="Weather data by WeatherAPI.com"
 					/>
 				</a>
-				<a
-					className="repository"
-					href="https://github.com/Grod56/intelligent-irrigation"
-					title="Github"
-					target="_blank"
-				>
-					View GitHub Repository
-				</a>
 			</div>
 		</div>
 	);
