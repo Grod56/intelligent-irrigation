@@ -75,7 +75,7 @@ const Main = function () {
 					model={newReadonlyModel({
 						condition: repositoryModelView?.isPendingChanges,
 						components: new Map([[true, () => <LoadingBar />]]),
-						FallBackComponent: () => <></>,
+						FallbackComponent: () => <></>,
 					})}
 				/>
 			</div>
@@ -93,7 +93,7 @@ const Main = function () {
 								),
 							],
 						]),
-						FallBackComponent: () => (
+						FallbackComponent: () => (
 							<>
 								<Dashboard model={dashBoardModel!} />
 								<ControlPanel model={controlPanelModel!} />

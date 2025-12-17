@@ -163,7 +163,7 @@ const Dashboard = function ({ model }) {
 											),
 										],
 									]),
-									FallBackComponent: () => (
+									FallbackComponent: () => (
 										<Spinner
 											className="status-icon"
 											animation="grow"
@@ -197,7 +197,7 @@ const Dashboard = function ({ model }) {
 										),
 									],
 								]),
-								FallBackComponent: () => <></>,
+								FallbackComponent: () => <></>,
 							})}
 						/>
 						<div className="ai-feedback-panel">

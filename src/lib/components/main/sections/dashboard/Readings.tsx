@@ -85,7 +85,7 @@ const Readings = function ({ model }) {
 								),
 							],
 						]),
-						FallBackComponent: () => (
+						FallbackComponent: () => (
 							<FontAwesomeIcon
 								className="icon"
 								icon={faCloud}

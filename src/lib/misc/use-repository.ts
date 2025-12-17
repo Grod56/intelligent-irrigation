@@ -28,8 +28,9 @@ export function useStatefulRepository<V extends RepositoryModelView>(
 	);
 
 	useEffect(() => {
-		modifiedInteract({ type: RepositoryInteractionType.RETRIEVE });
-	}, []);
+		if (!modelView)
+			modifiedInteract({ type: RepositoryInteractionType.RETRIEVE });
+	}, [modifiedInteract, modelView]);
 
 	return {
 		modelView,
