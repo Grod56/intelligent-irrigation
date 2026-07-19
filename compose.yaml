@@ -3,7 +3,7 @@ services:
         image: grod56/intelligent-irrigation-webapp
         build:
             context: .
-            dockerfile: Dockerfile.webapp
+            dockerfile: ./Dockerfile.webapp
             secrets:
                 - supabaseAnonKey
                 - supabaseUrl
@@ -16,7 +16,7 @@ services:
         image: grod56/intelligent-irrigation-smart-system
         build:
             context: .
-            dockerfile: Dockerfile.smart-system
+            dockerfile: ./Dockerfile.smart-system
         ports:
             - ${SMART_SYSTEM_HOST_PORT:-3001}:3001
         devices:
