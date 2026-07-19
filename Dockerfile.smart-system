@@ -10,15 +10,16 @@ RUN --mount=type=cache,target=/root/.npm \
 
 FROM node:lts-slim as build_and_run
 WORKDIR /app
+ARG PORT=3000
 ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
-ENV PORT=3001
+ENV PORT=${PORT}
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY shared ./shared
 COPY src/lib/misc/third-party/supabase.mjs ./src/lib/misc/third-party/supabase.mjs
 WORKDIR /app/smart-system
 COPY --exclude=package.json --exclude=package-lock.json ./smart-system .
 USER node
-EXPOSE 3001
+EXPOSE ${PORT}
 
 CMD ["node", "index.js"]

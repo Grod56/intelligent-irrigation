@@ -23,15 +23,16 @@ RUN --mount=type=secret,id=supabaseAnonKey,env=NEXT_PUBLIC_SUPABASE_ANON_KEY \
 
 FROM node:lts-slim AS runner
 WORKDIR /app
+ARG PORT=3000
 ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
-ENV PORT=3000
+ENV PORT=${PORT}
 COPY --from=builder --chown=node:node /app/public ./public
 COPY --from=builder --chown=node:node /app/.next/standalone ./
 COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 COPY --from=builder --chown=node:node /app/.next/cache ./.next/cache
 USER node
-EXPOSE 3000
+EXPOSE ${PORT}
 
 CMD ["node", "server.js"]
 
