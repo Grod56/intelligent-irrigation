@@ -1,0 +1,34 @@
+services:
+    webapp:
+        image: grod56/intelligent-irrigation-webapp
+        build:
+            context: .
+            dockerfile: Dockerfile.webapp
+            secrets:
+                - supabaseAnonKey
+                - supabaseUrl
+        ports:
+            - ${WEBAPP_HOST_PORT:-3000}:3000
+        env_file:
+            - .env
+
+    smart-system:
+        image: grod56/intelligent-irrigation-smart-system
+        build:
+            context: .
+            dockerfile: Dockerfile.smart-system
+        ports:
+            - ${SMART_SYSTEM_HOST_PORT:-3001}:3001
+        devices:
+            - ${SERIAL_PATH:?Error: No Serial Path Provided}:${SERIAL_PATH}
+        group_add:
+            - ${SERIAL_GID:-20}
+        init: true
+        env_file:
+            - ./smart-system/.env
+
+secrets:
+    supabaseAnonKey:
+        environment: SUPABASE_ANON_KEY
+    supabaseUrl:
+        environment: SUPABASE_URL
