@@ -1,0 +1,37 @@
+FROM node:lts-slim AS dependencies
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN --mount=type=cache,target=/root/.npm \
+    if [ -f package-lock.json ]; then \
+        npm ci --no-audit --no-fund; \
+    else \
+        echo "No lockfile found" && exit 1; \
+    fi
+
+FROM node:lts-slim AS builder 
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=dependencies /app/node_modules ./node_modules
+COPY --exclude=smart-system --exclude=microcontroller . . 
+RUN --mount=type=secret,id=supabaseAnonKey,env=NEXT_PUBLIC_SUPABASE_ANON_KEY \
+    --mount=type=secret,id=supabaseUrl,env=NEXT_PUBLIC_SUPABASE_URL \
+    if [ -f package-lock.json ]; then \
+        npm run build; \
+    else \
+        echo "No lockfile found" && exit 1; \
+    fi
+
+FROM node:lts-slim AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV HOSTNAME=0.0.0.0
+ENV PORT=3000
+COPY --from=builder --chown=node:node /app/public ./public
+COPY --from=builder --chown=node:node /app/.next/standalone ./
+COPY --from=builder --chown=node:node /app/.next/static ./.next/static
+COPY --from=builder --chown=node:node /app/.next/cache ./.next/cache
+USER node
+EXPOSE 3000
+
+CMD ["node", "server.js"]
+
