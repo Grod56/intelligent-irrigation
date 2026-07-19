@@ -30,10 +30,9 @@ jobs:
             - name: Build and Push Docker Image
               uses: docker/build-push-action@v7
               with:
-                  context: .
                   file: ./Dockerfile.smart-system
                   push: ${{ github.event_name != 'pull_request' }}
                   tags: ${{ steps.meta.outputs.tags }}
-                  annotations: ${{ steps.meta.outputs.tags }}
+                  annotations: ${{ steps.meta.outputs.annotations }}
                   provenance: true
                   sbom: true
